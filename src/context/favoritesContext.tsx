@@ -3,6 +3,8 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 interface FavoritosType {
     id: string;
     setId: (value: string) => void;
+    menuAberto: boolean;
+    setMenuAberto: (value: boolean) => void;
 }
 
 interface Props {
@@ -13,12 +15,15 @@ export const favorites_context = createContext<FavoritosType>({} as FavoritosTyp
 
 export default function FavoritosContext({children}: Props) {
     const [id, setId] = useState('');
+    const [menuAberto, setMenuAberto] = useState(false);
 
     return (
         <favorites_context.Provider 
             value={{
                 id,
-                setId
+                setId,
+                menuAberto,
+                setMenuAberto
             }}
         >
             {children}
