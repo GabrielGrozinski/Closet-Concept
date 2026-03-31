@@ -1,23 +1,25 @@
+import { X, Menu } from "lucide-react";
 import { contextFavoritos } from "../context/favoritesContext";
+import MenuAberto from "./menuAberto";
 
 
 export default function HeaderFixo() {
-    const {setMenuAberto} = contextFavoritos();
+    const {setMenuAberto, menuAberto} = contextFavoritos();
 
     const topicos = ["Início", "Joias", "Roupas", "Acessórios", "Sobre", "Contato"];
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-997 bg-[rgba(250,249,247)] backdrop-blur-3 border-b border-[rgba(196,181,160,0.1)] transition-all duration-300">
+        <header className="fixed left-0 top-0 right-0 z-20 bg-[rgba(250,249,247)] backdrop-blur-3 border-b border-[rgba(196,181,160,0.1)] transition-all duration-300 min-h-18.5 max-h-18.5">
 
             <div className="max-w-360 mx-auto lg:px-6 py-4 lg:flex items-center lg:justify-between grid grid-cols-[10%_1fr_10%] justify-items-end px-4 gap-2">
 
                 {/* Mobile Menu */}
-                <button onClick={() => setMenuAberto(true)} className="h-9 w-9 items-center justify-center min-w-full lg:hidden">
-                    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M4 12h16"></path>
-                    <path d="M4 18h16"></path>
-                    <path d="M4 6h16"></path>
-                    </svg>
+                <button onClick={() => setMenuAberto(!menuAberto)} className="h-9 w-9 items-center justify-center min-w-full lg:hidden">
+                    {!menuAberto ?
+                        <Menu className="min-h-6.5 min-w-6.5 max-h-6.5 max-w-6.5" />
+                    :
+                        <X className="min-h-6.5 min-w-6.5 max-h-6.5 max-w-6.5"/>
+                    }
                 </button>
 
                 {/* Logo */}
@@ -101,6 +103,8 @@ export default function HeaderFixo() {
 
                 </div>
             </div>
+
+            <MenuAberto />
 
         </header>
     )

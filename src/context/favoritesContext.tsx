@@ -5,6 +5,8 @@ interface FavoritosType {
     setId: (value: string) => void;
     menuAberto: boolean;
     setMenuAberto: (value: boolean) => void;
+    mostrarLogin: boolean;
+    setMostrarLogin: (v: boolean) => void;
 }
 
 interface Props {
@@ -16,6 +18,7 @@ export const favorites_context = createContext<FavoritosType>({} as FavoritosTyp
 export default function FavoritosContext({children}: Props) {
     const [id, setId] = useState('');
     const [menuAberto, setMenuAberto] = useState(false);
+    const [mostrarLogin, setMostrarLogin] = useState(false);
 
     return (
         <favorites_context.Provider 
@@ -23,7 +26,9 @@ export default function FavoritosContext({children}: Props) {
                 id,
                 setId,
                 menuAberto,
-                setMenuAberto
+                setMenuAberto,
+                setMostrarLogin,
+                mostrarLogin
             }}
         >
             {children}

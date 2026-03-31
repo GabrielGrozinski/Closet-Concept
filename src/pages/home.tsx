@@ -111,7 +111,7 @@ export default function Home() {
 
     return (
             <main>
-                <section className="relative h-screen min-h-150 flex items-center justify-center overflow-hidden">
+                <section className="relative -mt-17.5 h-screen min-h-150 flex items-center justify-center overflow-hidden">
 
                 {/* Background */}
                 <div
@@ -598,7 +598,7 @@ export default function Home() {
                             <input
                                 type="email"
                                 placeholder="Seu melhor e-mail"
-                                className="flex-1 h-14 bg-white rounded px-5 text-[15px] outline-none"
+                                className="flex-1 min-h-14 bg-white rounded px-5 text-[15px] outline-none"
                             />
 
                             <button

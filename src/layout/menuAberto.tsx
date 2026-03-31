@@ -1,6 +1,8 @@
 import { contextFavoritos } from "../context/favoritesContext";
-import { X, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown } from "lucide-react";
+import { useState} from "react";
+import { useNavigate } from "react-router-dom";
+
 
 
 type produtoExtra = {subtitulo: string, linkSubtitulo: string;}
@@ -13,10 +15,11 @@ interface Produtos {
     link?: string;
 }
 
-
 export default function MenuAberto() {
+    const navigate = useNavigate();
     const {menuAberto, setMenuAberto} = contextFavoritos();
     const [mostrarProdutos, setMostrarProdutos] = useState<string[]>(['']);
+    
 
     const produtos: Produtos[] = [
         {
@@ -83,16 +86,15 @@ export default function MenuAberto() {
             maisProdutos: false,
             link: ''
         },
-    ]
+    ];
 
     return (
-        <div className={`z-999 fixed min-h-screen left-0 top-0 transition-all duration-400 ${menuAberto ? 'min-w-4/5 max-w-4/5 sm:min-w-75 sm:max-w-75' : 'max-w-0 min-w-0'} bg-[#F5F3F0] flex flex-col overflow-hidden overflow-y-auto max-h-screen`}>
+        <div className={`z-20 transition-all duration-400 min-w-full ${menuAberto ? 'max-h-screen min-h-screen' : 'max-h-0 min-h-0'} bg-[rgba(250,249,247)] flex flex-col overflow-hidden`}>
 
-            <section className={`transition-all duration-200 ${menuAberto ? 'duration-0' : 'opacity-0'}`}>
-                <X onClick={() => setMenuAberto(false)} className="m-2 mb-4 h-8 w-8"/>
-
-                <section className="pb-10">
-                    <article className="py-3 border-y border-y-gray-800/15 font-[Montserrat] text-lg pl-2 text-slate-800">
+            <section className={`transition-all duration-200 relative ${menuAberto ? 'duration-0' : 'opacity-0'}`}>
+                
+                <main className="max-h-[75vh] overflow-y-auto">
+                    <article className="py-3 border-b border-b-gray-800/15 font-bold text-lg text-center pl-2 text-slate-800">
                         Todos os Produtos
                     </article>
 
@@ -108,7 +110,7 @@ export default function MenuAberto() {
                                 :
                                     setMostrarProdutos(prev => ([...prev, produto.nome]))
                                 } 
-                                className="py-3 relative border-y border-y-gray-800/15 font-[Montserrat] text-lg pl-2 text-slate-800">
+                                className="active:bg-blue-100 transition-colors duration-100 py-3 relative border-y border-y-gray-800/15 font-[Montserrat] text-lg pl-2 text-slate-800/80">
                                 {produto.nome}
 
                                 {produto.maisProdutos &&
@@ -129,9 +131,27 @@ export default function MenuAberto() {
                             </div>
 
                         </div>
-                        )}
+                    )}
 
-                </section>
+                </main>
+
+                <footer className="fixed bottom-4 py-2 min-w-full flex justify-center gap-4">
+                    <button 
+                    onClick={() => {
+                        setMenuAberto(false);
+                        navigate('/login');
+                    }}
+                    className="active:scale-98 transition-all duration-100 text-center p-2 min-w-30 rounded-2xl cursor-pointer border font-medium bg-zinc-800 text-white border-slate-800/30">Login</button>
+
+                    <button 
+                    onClick={() => {
+                        setMenuAberto(false);
+                        navigate('/login/cadastro');
+                    }} 
+                    className="active:scale-98 transition-all duration-100 p-2 min-w-30 text-center rounded-2xl text-white bg-[#6B4E37] font-medium cursor-pointer">Cadastro</button>
+                </footer>
+
+
             </section>
         </div>
     )
