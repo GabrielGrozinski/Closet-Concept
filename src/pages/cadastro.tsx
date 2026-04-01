@@ -2,13 +2,18 @@ import { useEffect, useState } from "react";
 import { EyeOff, Eye, Check, Ban } from "lucide-react";
 import "../styles/login.css";
 import { useNavigate } from "react-router-dom";
+import { contextAuth } from "../context/authContext";
+import { ClipLoader } from "react-spinners";
+
 
 export default function Cadastro() {
     const navigate = useNavigate();
-
+    const {fazerCadastro} = contextAuth();
+    const [loading, setLoading] = useState(false);
     const [requisitoMaiuscula, setRequisitoMaiuscula] = useState(false);
     const [requisitoMinuscula, setRequisitoMinuscula] = useState(false);
     const [requisitoCaractere, setRequisitoCaractere] = useState(false);
+    const [requisitoCadastro, setRequisitoCadastro] = useState(false);
 
     const [form, setForm] = useState({
     email: "",
@@ -19,6 +24,23 @@ export default function Cadastro() {
     telefone: "",
     data: ""
     });
+
+    useEffect(() => {
+        const todosPreenchidos = Object.values(form).every(
+        (valor) => valor.trim() !== ""
+        );
+        const condicaoFinal = 
+            todosPreenchidos
+            &&
+            requisitoCaractere
+            &&
+            requisitoMinuscula
+            &&
+            requisitoMaiuscula;
+
+        setRequisitoCadastro(condicaoFinal);
+    }, [form, requisitoCaractere, requisitoMinuscula, requisitoMaiuscula]);
+
     type CampoStatus = "sem-clicar" | "clicando" | "ja-clicou";
     type inputType = {
         name: "email" | "senha" | "nome" | "sobrenome" | "telefone" | "data" | "cpf",
@@ -31,6 +53,11 @@ export default function Cadastro() {
     const [campoStatus, setCampoStatus] = useState<Record<string, CampoStatus>>({
     email: "sem-clicar",
     senha: "sem-clicar",
+    nome: "sem-clicar",
+    sobrenome: "sem-clicar",
+    telefone: "sem-clicar",
+    data: "sem-clicar",
+    cpf: "sem-clicar",
     });
     const [efeitoIn, setEfeitoIn] = useState(false);
     const [mostrarSenha, setMostrarSenha] = useState(false);
@@ -81,7 +108,6 @@ export default function Cadastro() {
     },
     ];
     
-
     useEffect(() => {
         setEfeitoIn(true)
     }, []);
@@ -146,7 +172,26 @@ export default function Cadastro() {
         }
     }
 
-    
+    async function cadastro() {
+        try {
+            setLoading(true);
+            const cadastroRealizado = await fazerCadastro(form.email, form.cpf, form.telefone, form.nome, form.sobrenome, form.data, form.senha);
+            console.log('valores', form.email, form.cpf, form.telefone, form.nome, form.sobrenome, form.data, form.senha)
+            if (cadastroRealizado.success) {
+                console.log('cadastro bem realizado!');
+                window.scrollTo({
+                    top: 0
+                });
+                navigate("/");
+            }
+        } catch (erro) {
+            console.error('Houve um erro', erro);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
     return (
         <div className={`z-30 transition-all duration-300 ${efeitoIn ? 'max-w-full max-h-[200vh] min-h-screen min-w-full' : 'max-w-0 min-w-0'}`}>
 
@@ -297,7 +342,15 @@ export default function Cadastro() {
                 })}
                 </section>
 
-                <button onClick={() => navigate('/login/cadastro')} className="active:scale-98 transition-all font-medium duration-100 p-2 min-w-30 text-center rounded-2xl text-white bg-[#6B4E37] cursor-pointer">Cadastrar</button>
+                {loading ?
+                    <ClipLoader size={30} className="self-center" color="#000" />
+                :
+                    <button disabled={!requisitoCadastro} onClick={() => cadastro()} 
+                        className={`transition-all font-medium duration-100 p-2 min-w-30 text-center rounded-2xl text-white bg-[#6B4E37]  
+                            ${requisitoCadastro ? 'active:scale-98 cursor-pointer' : 'opacity-70 cursor-not-allowed'}
+                        `}>Cadastrar
+                    </button>
+                }
             </main>
 
         </div>

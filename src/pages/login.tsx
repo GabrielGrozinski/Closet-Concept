@@ -2,19 +2,44 @@ import { useEffect, useState } from "react";
 import { EyeOff, Eye } from "lucide-react";
 import "../styles/login.css";
 import { useNavigate } from "react-router-dom";
+import { contextAuth } from "../context/authContext";
+import { ClipLoader } from "react-spinners";
 
 export default function Login() {
+    const {fazerLogin} = contextAuth();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const [campoEmail, setCampoEmail] = useState<"sem-clicar" | "clicando" | "ja-clicou">("sem-clicar");
     const [campoSenha, setCampoSenha] = useState<"sem-clicar" | "clicando" | "ja-clicou">("sem-clicar");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [efeitoIn, setEfeitoIn] = useState(false);
     const [mostrarSenha, setMostrarSenha] = useState(false);
+    const [erroLogin, setErroLogin] = useState('');
 
     useEffect(() => {
         setEfeitoIn(true)
     }, []);
+
+    async function login() {
+        try {
+            setLoading(true);
+            const cadastroRealizado = await fazerLogin(email, senha)
+            if (cadastroRealizado.success) {
+                console.log('login bem realizado!');
+                window.scrollTo({
+                    top: 0
+                });
+                navigate("/");
+            } else {
+                setErroLogin(cadastroRealizado.error!);
+            }
+        } catch (erro) {
+            console.error('Houve um erro', erro);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className={`z-30 transition-all duration-300 ${efeitoIn ? 'max-w-full max-h-screen min-h-screen min-w-full' : 'max-w-0 min-w-0'}`}>
@@ -97,6 +122,12 @@ export default function Login() {
                         :
                             <EyeOff onClick={() => setMostrarSenha(true)} className="absolute right-2 top-1/2 -translate-y-[calc(50%+2px)] max-h-6 max-w-6" />
                         }
+
+                        {erroLogin &&
+                            <p className="text-red-600 absolute bottom-0 left-0 translate-y-10 font-medium">
+                                {erroLogin}
+                            </p>
+                        }
                     </div>
                     {campoSenha === "ja-clicou" &&
                         <p className="font-medium text-red-500">
@@ -104,13 +135,17 @@ export default function Login() {
                         </p>
                     }
 
-                    <p className="text-zinc-700 active:text-blue-600/60 underline text-right mt-4 font-medium">
+                    <p className="text-zinc-700 cursor-pointer active:text-blue-600/60 underline text-right mt-4 font-medium">
                         Esqueci minha senha
                     </p>
 
                 </section>
 
-                <button className="active:scale-98 bg-zinc-800 text-white font-medium transition-all duration-100 text-center p-2 min-w-30 rounded-2xl cursor-pointer border border-slate-800/30">Login</button>
+                {loading ?
+                    <ClipLoader size={30} className="self-center" color="#000" />
+                :
+                    <button disabled={!email || !senha} onClick={() => login()} className={`bg-zinc-800 text-white font-medium transition-all duration-100 text-center p-2 min-w-30 rounded-2xl border border-slate-800/30 ${(email && senha) ? 'active:scale-98 cursor-pointer' : 'opacity-70 cursor-not-allowed'}`}>Login</button>
+                }
 
                 <span className="flex items-center justify-center gap-2">
                     <span className="min-h-px max-h-px min-w-[40%] bg-slate-900/30 translate-y-0.75"></span>
