@@ -1,12 +1,26 @@
 import { X, Menu } from "lucide-react";
 import { contextFavoritos } from "../context/favoritesContext";
 import MenuAberto from "./menuAberto";
+import { useNavigate } from "react-router-dom";
 
 
 export default function HeaderFixo() {
     const {setMenuAberto, menuAberto} = contextFavoritos();
+    const navigate = useNavigate();
 
-    const topicos = ["Início", "Joias", "Roupas", "Acessórios", "Sobre", "Contato"];
+    type Topico = {
+    nome: string;
+    navigate: string;
+    };
+
+    const topicos: Topico[] = [
+    { nome: "Início", navigate: "/" },
+    { nome: "Joias", navigate: "/joias" },
+    { nome: "Roupas", navigate: "/roupas" },
+    { nome: "Acessórios", navigate: "/acessorios" },
+    { nome: "Sobre", navigate: "/sobre" },
+    { nome: "Contato", navigate: "/contato" }
+    ];
 
     return (
         <header className="fixed left-0 top-0 right-0 z-20 bg-[rgba(250,249,247)] backdrop-blur-3 border-b border-[rgba(196,181,160,0.1)] transition-all duration-300 min-h-18.5 max-h-18.5">
@@ -49,6 +63,7 @@ export default function HeaderFixo() {
                     <div className="flex justify-between min-w-140">
                     {topicos.map((label, index) => (
                         <button
+                        onClick={() => navigate(label.navigate)}
                         key={index}
                         className="relative cursor-pointer text-[16px] font-normal tracking-[0.5px] text-[#2C2C2C] 
                                     hover:text-[#d0a871] transition-colors duration-300 
@@ -56,7 +71,7 @@ export default function HeaderFixo() {
                                     after:w-0 after:h-px after:bg-[#C4B5A0] 
                                     after:transition-all after:duration-300 hover:after:w-full"
                         >
-                        {label}
+                        {label.nome}
                         </button>
                     ))}
                     </div>
@@ -81,7 +96,7 @@ export default function HeaderFixo() {
                     </button>
 
                     {/* User */}
-                    <button className="h-9 w-9 lg:flex items-center justify-center text-[#2C2C2C] hover:text-[#C4B5A0] transition-colors hidden">
+                    <button onClick={() => navigate('/login')} className="h-9 w-9 lg:flex items-center justify-center text-[#2C2C2C] hover:text-[#C4B5A0] transition-colors hidden">
                         <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>

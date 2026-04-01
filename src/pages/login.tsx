@@ -19,25 +19,46 @@ export default function Login() {
     return (
         <div className={`z-30 overflow-hidden transition-all duration-300 ${efeitoIn ? 'max-w-full max-h-screen min-h-screen min-w-full' : 'max-w-0 min-w-0'}`}>
 
-            <main className="px-[10%] pt-6 mt-1 bg-[#F5F3F0] min-h-screen flex flex-col gap-4">
+            <main className="px-[10%] lg:px-[15%] pt-6 mt-1 min-h-screen flex flex-col gap-4">
+
+                <h1 className="font-medium text-zinc-800 flex flex-col text-center mb-4 text-xl">
+                    LOGIN
+                    <span className="text-red-600 text-sm">
+                        *preenchimento obrigatórios
+                    </span>
+                </h1>
+
                 <section className="mb-10">
-                    <input
-                    autoComplete="off"
-                    type="email" 
-                    name="" 
-                    id=""
-                    onFocus={() => {
-                        setCampoEmail("clicando");
-                    }}
-                    onBlur={() => {
-                        setCampoEmail(email.length > 0 ? 'clicando' : "ja-clicou");
-                    }}
-                    onChange={(e) => {
-                        setEmail((e.currentTarget.value).trim().toLowerCase());
-                    }}
-                    placeholder="E-mail ou CPF"
-                    className={`border-0 border-b-2 min-w-full pb-0.5 outline-0 ${campoEmail === "ja-clicou" ? 'border-b-red-600' : 'border-b-zinc-800'}`}
-                    />
+
+                    <div className="relative">
+
+                        <label
+                            className={`absolute left-0 translate-x-0 text-gray-800/75 top-1/2 transition-all duration-200 ${
+                            campoEmail === "clicando"
+                                ? "-translate-[200%] text-xs font-bold"
+                                : "-translate-full text-sm font-medium"
+                            }`}
+                        >
+                            *E-mail ou CPF
+                        </label>
+
+                        <input
+                        autoComplete="off"
+                        type="email"
+                        name=""
+                        id=""
+                        onFocus={() => {
+                            setCampoEmail("clicando");
+                        }}
+                        onBlur={() => {
+                            setCampoEmail(email.length > 0 ? 'clicando' : "ja-clicou");
+                        }}
+                        onChange={(e) => {
+                            setEmail((e.currentTarget.value).trim().toLowerCase());
+                        }}
+                        className={`border-0 border-b-2 min-w-full pb-0.5 outline-0 ${campoEmail === "ja-clicou" ? 'border-b-red-600' : 'border-b-zinc-800'}`}
+                        />
+                    </div>
                     {campoEmail === "ja-clicou" &&
                         <p className="font-medium text-red-500">
                             este campo é obrigatório
@@ -45,11 +66,21 @@ export default function Login() {
                     }
 
                     <div className="relative mt-10">
+
+                        <label
+                            className={`absolute left-0 translate-x-0 text-gray-800/75 top-1/2 transition-all duration-200 ${
+                            campoSenha === "clicando"
+                                ? "-translate-[200%] text-xs font-bold"
+                                : "-translate-full text-sm font-medium"
+                            }`}
+                        >
+                            *Senha
+                        </label>
+
                         <input
                         type={mostrarSenha ? 'text' : 'password'}
                         name=""
                         id=""
-                        placeholder="Senha"
                         onFocus={() => {
                             setCampoSenha("clicando");
                         }}

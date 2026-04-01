@@ -147,11 +147,11 @@ export default function Cadastro() {
     }
 
     return (
-        <div className={`z-30 overflow-y-auto transition-all duration-300 ${efeitoIn ? 'max-w-full max-h-screen min-h-screen min-w-full' : 'max-w-0 min-w-0'}`}>
+        <div className={`z-30 overflow-y-auto lg:overflow-y-hidden transition-all duration-300 ${efeitoIn ? 'max-w-full max-h-screen lg:max-h-[200vh] min-h-screen min-w-full' : 'max-w-0 min-w-0'}`}>
 
-            <main className="px-[10%] pb-16 pt-6 mt-1 bg-[#F5F3F0] min-h-screen flex flex-col gap-4">
+            <main className="px-[10%] pb-16 pt-6 mt-1 min-h-screen flex flex-col gap-4">
                 
-                <h1 className="font-medium text-zinc-800 flex flex-col text-center">
+                <h1 className="font-medium text-zinc-800 flex flex-col text-center text-xl">
                     CADASTRO
                     <span className="text-red-600 text-sm">
                         *preenchimento obrigatórios
@@ -164,7 +164,7 @@ export default function Cadastro() {
                     const value = form[input.name];
 
                     return (
-                    <div key={input.name} className="mt-10">
+                    <div key={input.name} className="mt-10 max-w-5/6">
                         <div className="relative">
                         <input
                             autoComplete="off"
@@ -263,30 +263,30 @@ export default function Cadastro() {
 
                         {input.name === 'senha' && 
                             <div className={`flex flex-col gap-1 ${status === "ja-clicou" ? '' : 'mt-2'}`}>
-                                <p className="text-zinc-700/70 text-xs font-medium flex">
+                                <p className="text-zinc-700/70 text-[10px] font-medium flex">
                                     Ao menos 1 letra maiúscula
                                     {requisitoMaiuscula ? 
-                                        <Check className="max-h-4 ml-2 text-green-500 text-shadow-sm max-w-4" />
+                                        <Check className="max-h-4 ml-1 text-green-500 text-shadow-sm max-w-4" />
                                     :
-                                        <Ban className="max-h-4 ml-2 translate-y-px text-red-400 text-shadow-sm max-w-4"/>
+                                        <Ban className="max-h-4 ml-1 translate-y-px lg:translate-y-0 text-red-400 text-shadow-sm max-w-4"/>
                                     } 
                                 </p>
 
-                                <p className="text-zinc-700/70 text-xs font-medium flex">
+                                <p className="text-zinc-700/70 text-[10px] font-medium flex">
                                     Ao menos 1 letra minúscula
                                     {requisitoMinuscula ? 
-                                        <Check className="max-h-4 ml-2 text-green-500 text-shadow-sm max-w-4" />
+                                        <Check className="max-h-4 ml-1 text-green-500 text-shadow-sm max-w-4" />
                                     :
-                                        <Ban className="max-h-4 ml-2 translate-y-px text-red-400 text-shadow-sm max-w-4"/>
+                                        <Ban className="max-h-4 ml-1 translate-y-px lg:translate-y-0 text-red-400 text-shadow-sm max-w-4"/>
                                     } 
                                 </p>
 
-                                <p className="text-zinc-700/70 text-xs font-medium flex">
+                                <p className="text-zinc-700/70 text-[10px] font-medium flex">
                                     Ao menos 6 caracteres com números e letras
                                     {requisitoCaractere ? 
-                                        <Check className="max-h-4 ml-2 text-green-500 text-shadow-sm max-w-4" />
+                                        <Check className="max-h-4 ml-1 text-green-500 text-shadow-sm max-w-4" />
                                     :
-                                        <Ban className="max-h-4 ml-2 translate-y-px text-red-400 text-shadow-sm max-w-4"/>
+                                        <Ban className="max-h-4 ml-1 translate-y-px lg:translate-y-0 text-red-400 text-shadow-sm max-w-4"/>
                                     } 
                                 </p>
                             </div>
