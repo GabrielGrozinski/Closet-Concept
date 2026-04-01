@@ -17,7 +17,7 @@ export default function Login() {
     }, []);
 
     return (
-        <div className={`z-30 overflow-hidden transition-all duration-300 ${efeitoIn ? 'max-w-full max-h-screen min-h-screen min-w-full' : 'max-w-0 min-w-0'}`}>
+        <div className={`z-30 transition-all duration-300 ${efeitoIn ? 'max-w-full max-h-screen min-h-screen min-w-full' : 'max-w-0 min-w-0'}`}>
 
             <main className="px-[10%] lg:px-[15%] pt-6 mt-1 min-h-screen flex flex-col gap-4">
 
@@ -59,6 +59,7 @@ export default function Login() {
                         className={`border-0 border-b-2 min-w-full pb-0.5 outline-0 ${campoEmail === "ja-clicou" ? 'border-b-red-600' : 'border-b-zinc-800'}`}
                         />
                     </div>
+
                     {campoEmail === "ja-clicou" &&
                         <p className="font-medium text-red-500">
                             este campo é obrigatório

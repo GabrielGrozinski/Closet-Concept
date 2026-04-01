@@ -147,7 +147,7 @@ export default function Cadastro() {
     }
 
     return (
-        <div className={`z-30 overflow-y-auto lg:overflow-y-hidden transition-all duration-300 ${efeitoIn ? 'max-w-full max-h-screen lg:max-h-[200vh] min-h-screen min-w-full' : 'max-w-0 min-w-0'}`}>
+        <div className={`z-30 transition-all duration-300 ${efeitoIn ? 'max-w-full max-h-[200vh] min-h-screen min-w-full' : 'max-w-0 min-w-0'}`}>
 
             <main className="px-[10%] pb-16 pt-6 mt-1 min-h-screen flex flex-col gap-4">
                 
@@ -164,7 +164,7 @@ export default function Cadastro() {
                     const value = form[input.name];
 
                     return (
-                    <div key={input.name} className="mt-10 max-w-5/6">
+                    <div key={input.name} className="mt-10">
                         <div className="relative">
                         <input
                             autoComplete="off"
@@ -268,7 +268,7 @@ export default function Cadastro() {
                                     {requisitoMaiuscula ? 
                                         <Check className="max-h-4 ml-1 text-green-500 text-shadow-sm max-w-4" />
                                     :
-                                        <Ban className="max-h-4 ml-1 translate-y-px lg:translate-y-0 text-red-400 text-shadow-sm max-w-4"/>
+                                        <Ban className="max-h-4 ml-1 text-red-400 text-shadow-sm max-w-4"/>
                                     } 
                                 </p>
 
@@ -277,7 +277,7 @@ export default function Cadastro() {
                                     {requisitoMinuscula ? 
                                         <Check className="max-h-4 ml-1 text-green-500 text-shadow-sm max-w-4" />
                                     :
-                                        <Ban className="max-h-4 ml-1 translate-y-px lg:translate-y-0 text-red-400 text-shadow-sm max-w-4"/>
+                                        <Ban className="max-h-4 ml-1 text-red-400 text-shadow-sm max-w-4"/>
                                     } 
                                 </p>
 
@@ -286,7 +286,7 @@ export default function Cadastro() {
                                     {requisitoCaractere ? 
                                         <Check className="max-h-4 ml-1 text-green-500 text-shadow-sm max-w-4" />
                                     :
-                                        <Ban className="max-h-4 ml-1 translate-y-px lg:translate-y-0 text-red-400 text-shadow-sm max-w-4"/>
+                                        <Ban className="max-h-4 ml-1 text-red-400 text-shadow-sm max-w-4"/>
                                     } 
                                 </p>
                             </div>
