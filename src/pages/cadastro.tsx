@@ -146,6 +146,7 @@ export default function Cadastro() {
         }
     }
 
+    
     return (
         <div className={`z-30 transition-all duration-300 ${efeitoIn ? 'max-w-full max-h-[200vh] min-h-screen min-w-full' : 'max-w-0 min-w-0'}`}>
 
