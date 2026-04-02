@@ -334,7 +334,7 @@ export default function Home() {
 
                         {/* CTA */}
                         <div className="text-center">
-                        <button className="border-2 border-[#C4B5A0] text-[#2C2C2C] uppercase tracking-[1px] px-10 py-4 font-medium transition hover:bg-[#C4B5A0] hover:text-white hover:-translate-y-1">
+                        <button className="border-2 border-[#C4B5A0] text-[#2C2C2C] uppercase tracking-[1px] px-10 py-4 font-medium transition hover:bg-[#C4B5A0] hover:text-white hover:-translate-y-1 cursor-pointer">
                             Ver Toda Coleção
                         </button>
                         </div>
