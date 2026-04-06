@@ -1,37 +1,53 @@
 import type { ReactNode } from "react";
 import HeaderFixo from "./headerFixo";
 import FooterFixo from "./footerFixo";
-import { contextFavoritos } from "../context/favoritesContext";
 import { useEffect, useState } from "react";
+import MenuAberto from "./menuAberto";
 
 
 interface Props {
     children: ReactNode;
 }
 
-export default function PaginaPadrao({children}: Props) {
-    const [largura, setLargura] = useState(window.innerWidth);
-    const {menuAberto} = contextFavoritos();
-    const root = window.document.documentElement;
-    root.style.marginTop = largura < 1024 ? '150px' : '108px';
+type produtoExtra = {subtitulo: string, linkSubtitulo: string;}
+type Topico = {
+nome: string;
+navigate: string;
+produtosExtra?: produtoExtra[];
+imagem?: string;
+};
 
-    useEffect(() => {
-        root.style.overflowY = menuAberto ? 'hidden' : 'auto';
-    }, [menuAberto]);
+export default function PaginaPadrao({children}: Props) {
+    const [topicoAtual, setTopicoAtual] = useState<Topico | null>(null);
+    const [mostrarSearch, setMostrarSearch] = useState(false);
+    const [largura, setLargura] = useState(window.innerWidth);
+    const root = window.document.documentElement;
+    root.style.transition = 'all 0.3s';
+    root.style.marginTop = largura < 1024 ? mostrarSearch ? '130px' : '82px' : '108px';
 
 
     useEffect(() => {
         setLargura(window.innerWidth);
     }, [window.innerWidth]);
 
+
     return (
         <>
+            <header className="fixed top-0 min-h-7 max-h-7 left-0 right-0 bg-[#C4B5A0] z-1001 flex items-center justify-center">
+                <h1 className="text-white text-[12px] text-shadow-xs font-medium tracking-widest">FRETE GRÁTIS ATÉ O FIM DE ABRIL</h1>
+            </header>
 
-            <HeaderFixo />
+            <MenuAberto/>
+
+            <HeaderFixo mostrarSearch={mostrarSearch} setMostrarSearch={setMostrarSearch} topicoAtual={topicoAtual} setTopicoAtual={setTopicoAtual}/>
 
             {children}
 
             <FooterFixo />
+
+            {topicoAtual &&
+                <div className="inset-0 backdrop-blur-[0.4px] bg-black/8 fixed z-998"/>
+            }
 
         </>
     );
