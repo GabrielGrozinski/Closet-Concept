@@ -112,6 +112,9 @@ interface Props {
     setMostrarSearch: (v: boolean) => void;
     topicoAtual: Topico | null;
     setTopicoAtual: (v: Topico | null) => void;
+    mostrarCarrinho: boolean;
+    setMostrarCarrinho: (v: boolean) => void;
+    setMostrarLogin: (v: boolean) => void;
 }
 
 type produtoExtra = {subtitulo: string, linkSubtitulo: string;}
@@ -123,7 +126,7 @@ imagem?: string;
 };
 
 
-export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual, setTopicoAtual}: Props) {
+export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual, setTopicoAtual, setMostrarCarrinho, setMostrarLogin}: Props) {
     const {setMenuAberto, menuAberto} = contextFavoritos();
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
@@ -221,8 +224,8 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
                 <div className="max-w-360 mx-auto lg:px-6 lg:min-h-20 lg:flex items-center lg:justify-between grid grid-cols-[12%_1fr_20%] min-[500px]:grid-cols-[20%_1fr_20%] lg:grid-rows-1 grid-rows-[1fr_auto] pt-2 justify-items-center px-[5%] gap-4 lg:gap-2">
 
                     {/* Mobile Menu */}
-                    <button onClick={() => setMenuAberto(!menuAberto)} className="items-center justify-self-start justify-center min-w-full lg:hidden -mb-1 lg:mb-0">
-                            <Menu className="min-h-5 min-w-5 max-h-5 max-w-5" />
+                    <button onClick={() => setMenuAberto(!menuAberto)} className="items-center justify-self-start justify-center min-w-full lg:hidden -mb-2 lg:mb-0">
+                            <Menu className="min-h-7 min-w-7 max-h-7 max-w-7" />
                     </button>
 
                     {/* Logo */}
@@ -290,7 +293,7 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
                             </div>
                         </section>
 
-                        <div className={`transition-all duration-0 lg:duration-150 relative xl:max-h-20 xl:min-h-20 ${mostrarSearch ? 'xl:translate-x-0 opacity-100 lg:opacity-0 xl:opacity-100 xl:pointer-events-auto xl:relative xl:duration-300' : 'xl:translate-x-full opacity-0 lg:opacity-100 xl:opacity-0 xl:pointer-events-none xl:absolute max-h-0 min-h-0 xl:duration-0'} lg:min-h-20 lg:max-h-20 flex items-center`}>
+                        <div className={`transition-all duration-0 lg:duration-150 relative xl:max-h-20 xl:min-h-20 ${mostrarSearch ? 'xl:translate-x-0 opacity-100 lg:opacity-0 xl:opacity-100 xl:pointer-events-auto xl:relative xl:duration-300' : 'xl:translate-x-20 opacity-0 lg:opacity-100 xl:opacity-0 xl:pointer-events-none xl:absolute max-h-0 min-h-0 xl:duration-0'} lg:min-h-20 lg:max-h-20 flex items-center`}>
 
                             <Search className="absolute left-3 top-1/2 -translate-y-[50%] text-zinc-500" size={20}/>
                             <input
@@ -366,7 +369,7 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
 
                         {/* User */}
                         <div className="lg:flex flex-col hidden items-center justify-center">
-                            <button onClick={() => navigate('/login')} className="h-14 gap-1 w-14 lg:flex flex-col items-center justify-center text-[#2C2C2C] hover:text-[#C4B5A0] transition-colors hidden cursor-pointer">
+                            <button onClick={() => setMostrarLogin(true)} className="h-14 gap-1 w-14 lg:flex flex-col items-center justify-center text-[#2C2C2C] hover:text-[#C4B5A0] transition-colors hidden cursor-pointer">
                                 <span>
                                     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
@@ -379,7 +382,7 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
                         </div>
 
                         {/* Cart */}
-                        <div className="flex lg:flex-col items-center justify-center">
+                        <div onClick={() => setMostrarCarrinho(true)} className="flex lg:flex-col items-center justify-center">
                             <button className="relative lg:h-14 gap-1 lg:w-14 flex flex-col items-center justify-center text-[#2C2C2C] hover:text-[#C4B5A0] transition-colors min-w-full lg:min-w-9 cursor-pointer">
                                 <span>
                                     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">

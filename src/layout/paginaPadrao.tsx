@@ -3,7 +3,8 @@ import HeaderFixo from "./headerFixo";
 import FooterFixo from "./footerFixo";
 import { useEffect, useState } from "react";
 import MenuAberto from "./menuAberto";
-
+import CarrinhoDeCompras from "./carrinhoCompras";
+import Login from "../pages/login";
 
 interface Props {
     children: ReactNode;
@@ -19,6 +20,8 @@ imagem?: string;
 
 export default function PaginaPadrao({children}: Props) {
     const [topicoAtual, setTopicoAtual] = useState<Topico | null>(null);
+    const [mostrarLogin, setMostrarLogin] = useState(false);
+    const [mostrarCarrinho, setMostrarCarrinho] = useState(false);
     const [mostrarSearch, setMostrarSearch] = useState(false);
     const [largura, setLargura] = useState(window.innerWidth);
     const root = window.document.documentElement;
@@ -39,13 +42,26 @@ export default function PaginaPadrao({children}: Props) {
 
             <MenuAberto/>
 
-            <HeaderFixo mostrarSearch={mostrarSearch} setMostrarSearch={setMostrarSearch} topicoAtual={topicoAtual} setTopicoAtual={setTopicoAtual}/>
+            {mostrarLogin &&
+                <>
+                <Login setMostrarLogin={setMostrarLogin}/>
+                <div onClick={() => setMostrarLogin(false)} className="inset-0 backdrop-blur-[1px] bg-black/50 fixed z-1002"/>
+                </>
+            }
+
+            {mostrarCarrinho &&
+                <div onClick={() => setMostrarLogin(false)} className="inset-0 backdrop-blur-[1px] bg-black/36 fixed z-1002"/>
+            }
+
+            <CarrinhoDeCompras mostrarCarrinho={mostrarCarrinho} setMostrarCarrinho={setMostrarCarrinho}/>
+
+            <HeaderFixo mostrarSearch={mostrarSearch} setMostrarSearch={setMostrarSearch} topicoAtual={topicoAtual} setTopicoAtual={setTopicoAtual} mostrarCarrinho={mostrarCarrinho} setMostrarCarrinho={setMostrarCarrinho} setMostrarLogin={setMostrarLogin}/>
 
             {children}
 
             <FooterFixo />
 
-            {topicoAtual &&
+            {topicoAtual&&
                 <div className="inset-0 backdrop-blur-[0.4px] bg-black/8 fixed z-998"/>
             }
 
