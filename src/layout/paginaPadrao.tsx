@@ -40,7 +40,7 @@ export default function PaginaPadrao({children}: Props) {
                 <h1 className="text-white text-[12px] text-shadow-xs font-medium tracking-widest">FRETE GRÁTIS ATÉ O FIM DE ABRIL</h1>
             </header>
 
-            <MenuAberto/>
+            <MenuAberto setMostrarLogin={setMostrarLogin}/>
 
             {mostrarLogin &&
                 <>

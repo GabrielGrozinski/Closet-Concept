@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import FavoritosContext from "./favoritesContext";
 import AuthContext from "./authContext";
+import CartContext from "./cartContext";
 
 interface Props {
     children: ReactNode;
@@ -9,9 +10,11 @@ interface Props {
 export default function Provider({children}: Props) {
     return (
         <FavoritosContext>
-            <AuthContext>
-            {children}
-            </AuthContext>
+            <CartContext>
+                <AuthContext>
+                {children}
+                </AuthContext>
+            </CartContext>
         </FavoritosContext>
     )
 }

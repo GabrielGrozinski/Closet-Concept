@@ -47,7 +47,7 @@ export default function Login({setMostrarLogin}: Props) {
     }
 
     return (
-        <div className={`z-1003 rounded-md fixed top-1/2 left-1/2 -translate-1/2 transition-all duration-100 bg-[#f5f4f3] shadow-lg max-h-160 ${efeitoIn ? 'max-w-120  min-w-120' : 'max-w-0 min-w-0'} overflow-hidden`}>
+        <div className={`z-1003 rounded-md fixed top-1/2 left-1/2 -translate-1/2 transition-all duration-100 bg-[#f5f4f3] shadow-lg max-h-160 ${efeitoIn ? 'sm:max-w-120  sm:min-w-120 min-w-full max-w-full scale-94 sm:scale-100' : 'max-w-0 min-w-0'} overflow-hidden`}>
 
             <main className="min-h-screen flex flex-col">
                 <header className="bg-[#222222] min-w-full flex p-2 items-center justify-center max-h-14 min-h-14 relative">

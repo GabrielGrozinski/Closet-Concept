@@ -122,7 +122,6 @@ export default function CarrinhoDeCompras({mostrarCarrinho, setMostrarCarrinho}:
 
 
 
-
     return (
         <div className={`z-1004 fixed right-0 transition-all duration-300 bg-white top-0 bottom-0 grid grid-rows-[10%_1fr_25%] ${mostrarCarrinho ? 'min-w-full max-w-full lg:min-w-1/3 lg:max-w-1/3' : 'min-w-0 max-w-0'} overflow-hidden`}>
             
@@ -240,9 +239,9 @@ export default function CarrinhoDeCompras({mostrarCarrinho, setMostrarCarrinho}:
                 </article>
 
                 <nav className="grid grid-cols-2 gap-4 pb-2">
-                    <button className="min-w-full max-h-10 p-1 cursor-pointer font-light border border-slate-900/60 rounded-md text-xs sm:text-base transition-colors duration-200 hover:bg-neutral-100">Continuar comprando</button>
+                    <button className="min-w-full max-h-11 p-2 cursor-pointer font-light border border-slate-900/60 rounded-md text-xs sm:text-base transition-colors duration-200 hover:bg-neutral-100">Continuar comprando</button>
 
-                    <button className="min-w-full p-1 max-h-10 cursor-pointer bg-[#222222] text-white font-light text-xs sm:text-base rounded-md transition-colors duration-200 hover:bg-neutral-700">Finalizar compra</button>
+                    <button className="min-w-full p-2 max-h-11 cursor-pointer bg-[#222222] text-white font-light text-xs sm:text-base rounded-md transition-colors duration-200 hover:bg-neutral-700">Finalizar compra</button>
                 </nav>
             </footer>
 

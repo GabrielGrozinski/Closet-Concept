@@ -355,7 +355,7 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
                         </div>
 
                         {/* Heart */}
-                        <div className="flex lg:flex-col items-center justify-center">
+                        <div onClick={() => navigate('/lista-de-desejos')} className="flex lg:flex-col items-center justify-center">
                             <button className="lg:h-14 gap-1 lg:w-14 flex flex-col items-center justify-center text-[#2C2C2C] hover:text-[#C4B5A0] transition-colors cursor-pointer">
                                 <span>
                                     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">

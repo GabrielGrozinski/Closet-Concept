@@ -13,7 +13,12 @@ produtosExtra?: produtoExtra[];
 imagem?: string;
 };
 
-export default function MenuAberto() {
+
+interface Props {
+    setMostrarLogin: (v: boolean) => void;
+}
+
+export default function MenuAberto({setMostrarLogin}: Props) {
     const navigate = useNavigate();
     const {menuAberto, setMenuAberto} = contextFavoritos();
     
@@ -95,17 +100,21 @@ export default function MenuAberto() {
                         className="min-h-7 min-w-7 max-h-7 max-w-7"/>
 
                     <span className="flex justify-self-center gap-2 text-sm items-center font-[Poppins]">
-                        <User size={20} />
-                        <a className="underline" onClick={() => {
-                            setMenuAberto(false);
-                            navigate('/login');
-                        }}
+                        <User onClick={() => setMostrarLogin(true)} size={20} />
+                        <a className="underline" onClick={() => setMostrarLogin(true)}
                             >Login</a>
                     </span>
 
                     <span className="flex justify-self-center gap-2 text-sm items-center font-[Poppins]">
-                        <Heart size={20} />
-                        <a className="underline" href="">Favoritos</a>
+                        <Heart size={20} onClick={() => {
+                            navigate('/lista-de-desejos');
+                            setMenuAberto(false);
+                        }}/>
+                        <a onClick={() => {
+                            navigate('/lista-de-desejos');
+                            setMenuAberto(false);
+                        }} 
+                        className="underline">Favoritos</a>
                     </span>
                 </div>
             </header>
