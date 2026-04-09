@@ -1,5 +1,6 @@
-import { X, Trash } from "lucide-react";
+import { X, Trash, Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
+import { contextCart } from "../context/cartContext";
 
 
 type Props = {
@@ -7,49 +8,26 @@ type Props = {
     setMostrarCarrinho: (v: boolean) => void;
 }
 
-type ItensCarrinho = {
-    id: number;
-    nome: string;
-    imagem: string;
-    precoOriginal: number;
-    precoAtual: number;
-    quantidade: number;
-}
-
 
 export default function CarrinhoDeCompras({mostrarCarrinho, setMostrarCarrinho}: Props) {
-
-    const itensCarrinhoBase: ItensCarrinho[] = [
-    {
-        id: 1,
-        nome: "Vestido curto rosa solto gola alta sem manga longo marrom p",
-        imagem: "https://images.unsplash.com/photo-1542295669297-4d352b042bca?q=80&w=687&auto=format&fit=crop",
-        precoOriginal: 119.90,
-        precoAtual: 110.00,
-        quantidade: 1
-    },
-
-    ]
-
-    const [itensCarrinho, setItensCarrinho] = useState(itensCarrinhoBase);
-    const [valorFinal, setValorFinal] = useState('');
-    const [valorDesconto, setValorDesconto] = useState('');
-    const [valorParcelado, setValorParcelado] = useState('');
-    const [valorOriginal, setValorOriginal] = useState('');
+    const {carrinho, setCarrinho, removerItem, adicionarItemCarrinho, carrinhoQuantidade} = contextCart();
+    const [valorFinal, setValorFinal] = useState('0,00');
+    const [valorDesconto, setValorDesconto] = useState('0,00');
+    const [valorParcelado, setValorParcelado] = useState('0,00');
+    const [valorOriginal, setValorOriginal] = useState('0,00');
 
     function alterarQuantidade(index: number, novaQtd: number) {
+        if (!carrinho) return;
         if (novaQtd < 1) return
 
-        const novosItens = [...itensCarrinho]
+        const novosItens = [...carrinho]
         novosItens[index].quantidade = novaQtd
-        setItensCarrinho(novosItens)
-    }
-
-    function removerItem(id: number) {
-        setItensCarrinho(itensCarrinho.filter(item => item.id !== id))
+        setCarrinho(novosItens);
+        adicionarItemCarrinho(novosItens[index]);
     }
 
     function handleInputQuantidade(index: number, valor: number) {
+        if (!carrinho) return;
         if (isNaN(Number(valor))) return;
         // Remove tudo que não for número
         const newValor = valor.toString();
@@ -60,24 +38,25 @@ export default function CarrinhoDeCompras({mostrarCarrinho, setMostrarCarrinho}:
 
         // Não deixa vazio virar 0 automaticamente enquanto digita
         if (apenasNumeros === '') {
-            const novosItens = [...itensCarrinho];
+            const novosItens = [...carrinho];
             novosItens[index].quantidade = 0
-            setItensCarrinho(novosItens)
+            setCarrinho(novosItens)
             return
         }
 
         // Só aceita maior que 0
         if (numero < 1) return
 
-        const novosItens = [...itensCarrinho]
+        const novosItens = [...carrinho]
         novosItens[index].quantidade = numero
-        setItensCarrinho(novosItens)
+        setCarrinho(novosItens)
     }
 
     const somarValores = () => {
+        if (!carrinho) return;
         let valorFinal = 0;
         let valorOriginal = 0;
-        itensCarrinho.forEach((item) => {
+        carrinho.forEach((item) => {
             valorFinal += (item.precoAtual * item.quantidade);
             valorOriginal += (item.precoOriginal * item.quantidade);
         });
@@ -118,12 +97,12 @@ export default function CarrinhoDeCompras({mostrarCarrinho, setMostrarCarrinho}:
 
     useEffect(() => {
         somarValores();
-    }, [itensCarrinho]);
+    }, [carrinho]);
 
 
 
     return (
-        <div className={`z-1004 fixed right-0 transition-all duration-300 bg-white top-0 bottom-0 grid grid-rows-[10%_1fr_25%] ${mostrarCarrinho ? 'min-w-full max-w-full lg:min-w-1/3 lg:max-w-1/3' : 'min-w-0 max-w-0'} overflow-hidden`}>
+        <div className={`z-1004 fixed right-0 transition-all duration-300 bg-white top-0 bottom-0 grid grid-rows-[10vh_65vh_25vh] ${mostrarCarrinho ? 'min-w-full max-w-full lg:min-w-1/3 lg:max-w-1/3' : 'min-w-0 max-w-0'} overflow-hidden`}>
             
             <header className="flex justify-between items-center min-h-full p-4">
                 <button className="relative gap-1 flex flex-col items-center justify-center text-[#2C2C2C] hover:text-[#C4B5A0] transition-colors cursor-pointer">
@@ -136,7 +115,7 @@ export default function CarrinhoDeCompras({mostrarCarrinho, setMostrarCarrinho}:
                     </span>
 
                     <span className="absolute -top-3 -right-3 bg-[#C4B5A0] text-[#FAF9F7] text-[10px] font-semibold px-1.5 py-0.5 rounded-full scale-90">
-                    0
+                    {carrinhoQuantidade}
                     </span>
                 </button>
 
@@ -147,72 +126,77 @@ export default function CarrinhoDeCompras({mostrarCarrinho, setMostrarCarrinho}:
                 </button>
             </header>
 
-            <main className="flex flex-col p-4">
-            {itensCarrinho.map((item, index) => (
-                <div
-                key={item.id}
-                className="grid grid-cols-[20%_1fr_15%_10%] grid-rows-2 border-b border-b-black/6 pb-4"
-                >
-                <img
-                    className="row-span-full col-1 rounded-lg"
-                    src={item.imagem}
-                    alt={item.nome}
-                />
-
-                <p className="col-[2/4] row-1 px-4 font-[Poppins] font-extralight text-xs">
-                    {item.nome}
-                </p>
-
-                {/* QUANTIDADE */}
-                <div className="min-w-[48%] max-w-[48%] ml-4 h-[55%] row-2 col-2 border border-slate-500/20 grid grid-cols-3 overflow-hidden items-center">
-                    <button
-                    onClick={() => alterarQuantidade(index, item.quantidade - 1)}
-                    className="font-bold text-3xl cursor-pointer pb-1 hover:bg-gray-200 min-h-full"
+            <main className="flex flex-col p-4 max-h-[65vh] mb-4 overflow-y-auto">
+            {carrinho ?
+                carrinho.map((item, index) => (
+                    <div
+                    key={item.id}
+                    className="grid grid-cols-[20%_1fr_15%_10%] grid-rows-2 border-b border-b-black/6 pb-4 max-h-38 min-h-38 pt-4"
                     >
-                    -
-                    </button>
-
-                    <input
-                    type="text"
-                    className="min-h-full text-center text-sm text-neutral-800 outline-0"
-                    value={item.quantidade}
-                    onChange={(e) => handleInputQuantidade(index, Number(e.target.value))}
+                    <img
+                        className="row-span-full col-1 rounded-lg min-h-32 max-h-32 object-cover min-w-full"
+                        src={item.imagem}
+                        alt={item.nome}
                     />
 
+                    <p className="col-[2/4] row-1 self-center px-4 font-[Poppins] text-xs">
+                        {item.nome}
+                    </p>
+
+                    <div className="min-w-[48%] self-center max-w-[48%] ml-4 h-[55%] row-2 col-2 border border-slate-500/20 grid grid-cols-3 overflow-hidden items-center">
+                        <button
+                        onClick={() => alterarQuantidade(index, item.quantidade - 1)}
+                        className="cursor-pointer flex items-center justify-center hover:bg-gray-200 min-h-full"
+                        >
+                        <Minus />
+                        </button>
+
+                        <input
+                        type="text"
+                        className="min-h-full text-center text-sm text-neutral-800 outline-0"
+                        value={item.quantidade}
+                        onChange={(e) => handleInputQuantidade(index, Number(e.target.value))}
+                        />
+
+                        <button
+                        onClick={() => alterarQuantidade(index, item.quantidade + 1)}
+                        className="cursor-pointer flex items-center justify-center hover:bg-gray-200 min-h-full"
+                        >
+                        <Plus/>
+                        </button>
+                    </div>
+
+                    {/* REMOVER */}
                     <button
-                    onClick={() => alterarQuantidade(index, item.quantidade + 1)}
-                    className="font-bold text-xl cursor-pointer pb-0.75 hover:bg-gray-200 min-h-full"
+                        className="row-1 col-4 flex justify-end items-start"
+                        onClick={() => removerItem(item.id)}
                     >
-                    +
+                        <Trash className="min-w-6 min-h-6 max-w-6 max-h-6 cursor-pointer hover:text-red-600 transition-colors duration-200" />
                     </button>
-                </div>
 
-                {/* REMOVER */}
-                <button
-                    className="row-1 col-4 flex justify-end items-start"
-                    onClick={() => removerItem(item.id)}
-                >
-                    <Trash className="min-w-6 min-h-6 max-w-6 max-h-6 cursor-pointer hover:text-red-600 transition-colors duration-200" />
-                </button>
+                    {/* PREÇOS */}
+                    <div className="flex flex-col items-end row-2 col-[3/5]">
+                        <h2 className="line-through text-neutral-500 text-sm">
+                        {(item.quantidade * item.precoOriginal).toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        })}
+                        </h2>
 
-                {/* PREÇOS */}
-                <div className="flex flex-col items-end row-2 col-[3/5]">
-                    <h2 className="line-through text-neutral-500 text-sm">
-                    {(item.quantidade * item.precoOriginal).toLocaleString('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL'
-                    })}
-                    </h2>
-
-                    <h1 className="text-neutral-900 text-xl font-bold">
-                    {(item.quantidade * item.precoAtual).toLocaleString('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL'
-                    })}
-                    </h1>
+                        <h1 className="text-neutral-900 text-xl font-bold">
+                        {(item.quantidade * item.precoAtual).toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                        })}
+                        </h1>
+                    </div>
+                    </div>
+                ))
+                :
+                <div className="flex items-center justify-center min-h-full">
+                    <h1 className="font-[Poppins] font-bold text-2xl text-center">Carrinho vazio</h1>
                 </div>
-                </div>
-            ))}
+            }
             </main>
 
             <footer className="p-4 flex flex-col justify-between font-[Poppins]">

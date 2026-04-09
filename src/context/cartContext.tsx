@@ -1,17 +1,21 @@
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
 type ItensCarrinho = {
-    id: number;
+    id: string;
     nome: string;
     imagem: string;
-    precoOriginal?: number;
+    precoOriginal: number;
     precoAtual: number;
     quantidade: number;
 }
 
 interface CartType {
     adicionarItemCarrinho: (v: ItensCarrinho) => void;
-    buscarItens: () => Promise<ItensCarrinho | null>;
+    removerItem: (v: string) => void;
+    carrinho: ItensCarrinho[] | null;
+    setCarrinho: (v: ItensCarrinho[] | null) => void;
+    carrinhoQuantidade: number;
+    setCarrinhoQuantidade: (v: number) => void;
 }
 
 interface Props {
@@ -21,22 +25,63 @@ interface Props {
 export const cart_context = createContext<CartType>({} as CartType);
 
 export default function CartContext({children}: Props) {
+    const [carrinho, setCarrinho] = useState<ItensCarrinho[] | null>(() => {
+        try {
+            const data = localStorage.getItem('carrinho');
+            return data ? JSON.parse(data) : null;
+        } catch {
+            return null;
+        }
+    });
+
+    const [carrinhoQuantidade, setCarrinhoQuantidade] = useState<number>(() => {
+        try {
+            const data = localStorage.getItem('carrinho');
+            return data ? JSON.parse(data).length : 0;
+        } catch {
+            return 0;
+        }
+    });
 
     function adicionarItemCarrinho(item: ItensCarrinho) {
-        const produtosAtuais = localStorage.getItem('produtos');
+        const produtosAtuais = localStorage.getItem('carrinho');
 
-        let produtos = produtosAtuais ? JSON.parse(produtosAtuais) : [];
+        let produtos: ItensCarrinho[] = produtosAtuais 
+            ? JSON.parse(produtosAtuais) 
+            : [];
 
-        produtos = [...produtos, item];
+        const produtoExiste = produtos.some(p => p.id === item.id);
 
-        localStorage.setItem('produtos', JSON.stringify(produtos));
+        if (produtoExiste) {
+            const atualizado = produtos.map(produto => {
+                if (produto.id === item.id) {
+                    if (produto.quantidade === item.quantidade) return produto;
+
+                    return {
+                        ...produto,
+                        quantidade: item.quantidade
+                    };
+                }
+                return produto;
+            });
+
+            setCarrinho(atualizado);
+            localStorage.setItem('carrinho', JSON.stringify(atualizado));
+            return;
+        }
+
+        const novoCarrinho = [...produtos, item];
+
+        setCarrinho(novoCarrinho);
+        setCarrinhoQuantidade(novoCarrinho.length);
+        localStorage.setItem('carrinho', JSON.stringify(novoCarrinho));
     }
 
-    function buscarItens() {
-        const produtosAtuais = localStorage.getItem('produtos');
-        const produtos = produtosAtuais ? JSON.parse(produtosAtuais) : null;
-
-        return produtos; 
+    function removerItem(id: string) {
+        const novosProdutos = carrinho?.filter((produto) => produto.id !== id);
+        localStorage.setItem('carrinho', JSON.stringify(novosProdutos));
+        setCarrinho(novosProdutos ?? null);
+        setCarrinhoQuantidade(novosProdutos ? novosProdutos.length : 0);
     }
 
 
@@ -44,7 +89,11 @@ export default function CartContext({children}: Props) {
         <cart_context.Provider 
             value={{
                 adicionarItemCarrinho,
-                buscarItens
+                removerItem,
+                carrinho,
+                setCarrinho,
+                carrinhoQuantidade,
+                setCarrinhoQuantidade
             }}
         >
             {children}
@@ -52,6 +101,6 @@ export default function CartContext({children}: Props) {
     );
 }
 
-export const contextFavoritos = () => {
+export const contextCart = () => {
     return useContext(cart_context);
 }

@@ -33,6 +33,10 @@ export default function PaginaPadrao({children}: Props) {
         setLargura(window.innerWidth);
     }, [window.innerWidth]);
 
+    useEffect(() => {
+        root.style.overflowY = mostrarCarrinho ? 'hidden' : 'auto';
+    }, [mostrarCarrinho]);
+
 
     return (
         <>
@@ -50,7 +54,7 @@ export default function PaginaPadrao({children}: Props) {
             }
 
             {mostrarCarrinho &&
-                <div onClick={() => setMostrarLogin(false)} className="inset-0 backdrop-blur-[1px] bg-black/36 fixed z-1002"/>
+                <div onClick={() => setMostrarCarrinho(false)} className="inset-0 backdrop-blur-[1px] bg-black/36 fixed z-1002"/>
             }
 
             <CarrinhoDeCompras mostrarCarrinho={mostrarCarrinho} setMostrarCarrinho={setMostrarCarrinho}/>

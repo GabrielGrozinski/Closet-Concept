@@ -2,6 +2,7 @@ import { X, Menu, Search, ChevronRight, MoveRight } from "lucide-react";
 import { contextFavoritos } from "../context/favoritesContext";
 import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
+import { contextCart } from "../context/cartContext";
 
 
 const produtos = [
@@ -127,6 +128,7 @@ imagem?: string;
 
 
 export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual, setTopicoAtual, setMostrarCarrinho, setMostrarLogin}: Props) {
+    const {carrinhoQuantidade} = contextCart();
     const {setMenuAberto, menuAberto} = contextFavoritos();
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
@@ -219,7 +221,7 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
     return (
         <>
 
-            <header onMouseLeave={() => setTopicoAtual(null)} className={`fixed left-0 top-7 right-0 z-999 bg-[rgba(250,249,247)] transition-all duration-300 lg:pb-1 lg:pt-0 lg:min-h-19 lg:max-h-20 max-h-30 min-h-15 ${mostrarSearch ? 'pb-4' : 'pb-0'} xl:border-b xl:border-b-[rgba(147,135,117,0.3)]`}>
+            <header onMouseLeave={() => setTopicoAtual(null)} className={`fixed left-0 top-7 right-0 z-999 bg-[rgba(250,249,247)] transition-all duration-300 lg:pb-1 lg:pt-0 lg:min-h-19 lg:max-h-20 max-h-30 min-h-15 ${mostrarSearch ? 'pb-4' : 'pb-0'} xl:border-b xl:border-b-[rgba(147,135,117,0.1)]`}>
 
                 <div className="max-w-360 mx-auto lg:px-6 lg:min-h-20 lg:flex items-center lg:justify-between grid grid-cols-[12%_1fr_20%] min-[500px]:grid-cols-[20%_1fr_20%] lg:grid-rows-1 grid-rows-[1fr_auto] pt-2 justify-items-center px-[5%] gap-4 lg:gap-2">
 
@@ -286,7 +288,7 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
                                             </div>
                                         </article>
 
-                                        <img className={`max-w-[96%] min-w-[96%] mr-4 mb-4 my-5 rounded-lg transition-all duration-600 ${topicoAtual ? 'max-h-100 min-h-100 opacity-100' : 'max-h-0 min-h-0 opacity-0'}`} src={topicoAtual?.imagem} alt="" />
+                                        <img className={`max-w-[96%] min-w-[96%] mr-4 mb-4 my-5 rounded-lg transition-all duration-600 ${topicoAtual ? 'max-h-100 min-h-100 opacity-100' : 'max-h-0 min-h-0 opacity-0'} object-cover`} src={topicoAtual?.imagem} alt="" />
                                     </>
                                     }
                                 </section>
@@ -393,7 +395,7 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
                                 </span>
 
                                 <span className="absolute -top-1 -right-1 bg-[#C4B5A0] text-[#FAF9F7] text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
-                                0
+                                {carrinhoQuantidade}
                                 </span>
 
                                 <p className="hidden lg:block -mt-1 text-[13px] text-neutral-700">Carrinho</p>

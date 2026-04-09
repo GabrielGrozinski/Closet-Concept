@@ -162,7 +162,7 @@ export default function MenuAberto({setMostrarLogin}: Props) {
                         </div>
                     </article>
 
-                    <img className={`max-w-[96%] min-w-[96%] mr-4 mb-4 my-5 rounded-lg transition-all duration-600 ${topicoAtual ? 'min-h-[78vw] max-h-[78vw] sm:min-h-[82vw] sm:max-h-[82vw] opacity-100' : 'max-h-0 min-h-0 opacity-0'}`} src={topicoAtual?.imagem} alt="" />
+                    <img className={`max-w-[96%] min-w-[96%] mr-4 mb-4 my-5 rounded-lg transition-all duration-600 ${topicoAtual ? 'min-h-[78vw] max-h-[78vw] sm:min-h-[82vw] sm:max-h-[82vw] opacity-100' : 'max-h-0 min-h-0 opacity-0'} object-cover`} src={topicoAtual?.imagem} alt="" />
                 </>
                 }
             </section>

@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import Home from "./pages/home";
 import PaginaPadrao from "./layout/paginaPadrao";
 import Wishlist from "./pages/wishlist";
+import Conta from "./pages/conta";
+import DadosPessoais from "./layout/dadosPessoais";
 
 
 export function ScrollTop() {
@@ -17,8 +19,6 @@ export function ScrollTop() {
 
 
 export default function Rotas() {
-
-
     return (
         <HashRouter>
             <ScrollTop/>
@@ -26,6 +26,9 @@ export default function Rotas() {
                 <Route element={<PaginaPadrao><Outlet/></PaginaPadrao>}>
                     <Route index element={<Home />} />
                     <Route path="lista-de-desejos" element={<Wishlist/>} />
+                    <Route path="/conta" element={<Conta><Outlet/></Conta>}>
+                        <Route index element={<DadosPessoais/>}/>
+                    </Route>
                 </Route>
 
             </Routes>
