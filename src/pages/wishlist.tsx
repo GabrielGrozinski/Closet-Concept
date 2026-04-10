@@ -73,11 +73,11 @@ export default function Wishlist() {
 
     return (
         <div className="min-h-screen bg-[rgba(250,249,247)] p-4">
-            <h1 className="font-[Poppins] font-medium text-2xl ml-34">Lista de Desejos</h1>
+            <h1 className="font-[Poppins] font-medium sm:text-2xl text-xl sm:ml-34 text-center sm:text-left">Lista de Desejos</h1>
 
             <main
-            style={{ rowGap: '66px' }}
-            className="grid pt-10 px-10 gap-10 justify-center grid-cols-[repeat(auto-fit,minmax(272px,272px))]"
+            style={{ rowGap: '46px' }}
+            className="grid pt-10 sm:px-10 sm:gap-10 justify-center sm:grid-cols-[repeat(auto-fit,minmax(272px,272px))] grid-cols-2 gap-2"
             >
             <CardProduto itens={itensCarrinhoBase}/>
             </main>

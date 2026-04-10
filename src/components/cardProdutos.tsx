@@ -92,8 +92,8 @@ export default function CardProduto({itens}: Props) {
                 onMouseEnter={() => setItemEscolhido(item.id.toString())}
                 onMouseLeave={() => setItemEscolhido('')} 
                 onClick={() => setItemEscolhido(item.id.toString())} 
-                className={`grid grid-rows-[280px_auto] min-w-62 max-w-62 overflow-hidden gap-4 shadow-lg border border-[#22222212] cursor-pointer transition-all duration-300 rounded-md relative ${itemEscolhido === item.id.toString() ? 'max-h-117 min-h-117' : 'max-h-104 min-h-104'}`}>
-                    <img className="min-h-70 max-h-70 min-w-62 object-cover" src={item.imagem} alt="" />
+                className={`grid sm:grid-rows-[280px_auto] grid-rows-[180px_auto] sm:min-w-62 sm:max-w-62 min-w-full max-w-full overflow-hidden gap-3 shadow-lg border border-[#22222212] cursor-pointer transition-all duration-300 rounded-md relative ${itemEscolhido === item.id.toString() ? 'sm:max-h-117 sm:min-h-117 min-h-92 max-h-96' : 'sm:max-h-104 sm:min-h-104 min-h-92 max-h-96'}`}>
+                    <img className="sm:min-h-70 sm:max-h-70 min-h-45 max-h-45 sm:min-w-62 min-w-[45vw] max-w-[45vw] object-cover" src={item.imagem} alt="" />
 
                     <span onClick={() => {
                         if (!session) return;
@@ -103,17 +103,17 @@ export default function CardProduto({itens}: Props) {
                         } else {
                             adicionarFavoritos(item.id);
                         }
-                    }} 
-                    className="absolute top-1.5 right-1.5 bg-white p-2 rounded-full">
-                        <Heart className="text-red-400 text-shadow-[1px_1px_1px_#0000008a]" fill={favoritos.includes(item.id) ? "currentColor" : "none"} size={24}/>
+                    }}
+                    className="absolute sm:top-1.5 sm:right-1.5 top-1 right-1 bg-white sm:p-2 p-1 rounded-full cursor-default hover:bg-[#fff6ea]">
+                        <Heart className="text-red-400 text-shadow-[1px_1px_1px_#0000008a] max-h-4 max-w-4 sm:max-w-6 sm:max-h-6" fill={favoritos.includes(item.id) ? "currentColor" : "none"}/>
                     </span>
 
-                    <div className="flex flex-col py-0 font-[Poppins] text-xs px-6">
-                        <h1 className="mb-2 font-light text-center text-sm">{item.nome}</h1>
+                    <div className="flex flex-col py-0 font-[Poppins] sm:text-xs text-[10px] sm:px-6 px-3">
+                        <h1 className="mb-2 font-light text-center sm:text-sm text-[10px]">{item.nome}</h1>
 
-                        <span className="flex justify-center gap-[5%] min-w-full items-center mb-2">
+                        <span className="flex sm:flex-row flex-col justify-center gap-[5%] min-w-full items-center mb-2">
                             {item.precoOriginal &&
-                            <h2 className="text-lg font-light line-through translate-y-[1.5px]">
+                            <h2 className="sm:text-lg text-sm font-light line-through sm:translate-y-[1.5px]">
                                 {item.precoOriginal?.toLocaleString('pt-BR', {
                                     style: 'currency',
                                     currency: 'BRL'
@@ -121,7 +121,7 @@ export default function CardProduto({itens}: Props) {
                             </h2>
                             }
 
-                            <h2 className="font-bold text-2xl">
+                            <h2 className="font-bold sm:text-2xl text-lg">
                                 {item.precoAtual.toLocaleString('pt-BR', {
                                     style: 'currency',
                                     currency: 'BRL'
@@ -146,13 +146,13 @@ export default function CardProduto({itens}: Props) {
                         </h3>
 
                         <div 
-                            className={`grid grid-cols-2 transition-all duration-300 items-center justify-items-center gap-2 ${itemEscolhido === item.id.toString() ? 'mt-4 min-h-10 max-h-10' : 'mt-2 max-h-0 min-h-0'} overflow-hidden`}> 
+                            className={`grid sm:grid-cols-2 grid-cols-[25%_1fr] transition-all duration-300 items-center justify-items-center gap-2 ${itemEscolhido === item.id.toString() ? 'sm:mt-4 sm:min-h-10 sm:max-h-10 mt-4' : 'sm:mt-2 sm:max-h-0 sm:min-h-0 mt-4'} overflow-hidden`}> 
 
-                            <button onClick={() => adicionarItemCarrinho(item)} className="min-w-full bg-[#f8ebdc] border border-black/6 p-2 rounded-xl text-zinc-900 text-shadow-lg flex items-center justify-center transition-colors duration-200 hover:opacity-80 cursor-pointer min-h-8 max-h-8"> 
-                                <ShoppingCart size={18}/> 
+                            <button onClick={() => adicionarItemCarrinho(item)} className="min-w-full max-w-full bg-[#f8ebdc] border border-black/6 p-2 sm:rounded-xl rounded-full text-zinc-900 text-shadow-lg flex items-center justify-center transition-colors duration-200 hover:opacity-80 cursor-pointer sm:min-h-8 sm:max-h-8"> 
+                                <ShoppingCart className="sm:max-h-4.5 sm:max-w-4.5 max-w-4 max-h-4"/> 
                             </button> 
                             
-                            <button className="min-w-full bg-[#222222] p-2 rounded-xl text-white font-[Poppins] font-bold text-shadow-lg transition-colors duration-200 hover:opacity-90 cursor-pointer min-h-8 max-h-8"> 
+                            <button className="sm:min-w-full sm:max-w-full min-w-[90%] max-w-[90%] bg-[#222222] sm:p-2 p-1 rounded-xl text-white font-[Poppins] font-bold text-shadow-lg transition-colors duration-200 hover:opacity-90 cursor-pointer min-h-8 max-h-8"> 
                                 Visualizar 
                             </button> 
                         </div>

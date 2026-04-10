@@ -2,7 +2,7 @@ import { contextFavoritos } from "../context/favoritesContext";
 import { Heart, MoveRight, User, X } from "lucide-react";
 import { useState} from "react";
 import { useNavigate } from "react-router-dom";
-
+import { contextAuth } from "../context/authContext";
 
 
 type produtoExtra = {subtitulo: string, linkSubtitulo: string;}
@@ -20,6 +20,7 @@ interface Props {
 
 export default function MenuAberto({setMostrarLogin}: Props) {
     const navigate = useNavigate();
+    const {user} = contextAuth();
     const {menuAberto, setMenuAberto} = contextFavoritos();
     
     const topicos: Topico[] = [
@@ -100,9 +101,9 @@ export default function MenuAberto({setMostrarLogin}: Props) {
                         className="min-h-7 min-w-7 max-h-7 max-w-7"/>
 
                     <span className="flex justify-self-center gap-2 text-sm items-center font-[Poppins]">
-                        <User onClick={() => setMostrarLogin(true)} size={20} />
+                        <User onClick={() => user ? navigate('/conta') : setMostrarLogin(true)} size={20} />
                         <a className="underline" onClick={() => setMostrarLogin(true)}
-                            >Login</a>
+                            >Conta</a>
                     </span>
 
                     <span className="flex justify-self-center gap-2 text-sm items-center font-[Poppins]">

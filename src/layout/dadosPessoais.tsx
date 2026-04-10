@@ -8,11 +8,11 @@ export default function DadosPessoais() {
     const {user} = contextAuth();
     const [requisitoCadastro, setRequisitoCadastro] = useState(false);
     const [form, setForm] = useState({
-        nome: "Gabriel",
-        sobrenome: "Grozinski",
-        cpf: "464.751.998-85",
-        telefone: "(11) 94444-5511",
-        data: "20/04/2004"
+        nome: "",
+        sobrenome: "",
+        cpf: "",
+        telefone: "",
+        data: ""
     });
     const [formOriginal, setFormOriginal] = useState(form);
 

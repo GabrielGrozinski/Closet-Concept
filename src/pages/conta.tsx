@@ -24,7 +24,7 @@ export default function Conta({children}: Props) {
         },
         {
             nome: 'Endereços',
-            navigate: '/conta/enderecos'
+            navigate: '/conta/endereco'
         },
         {
             nome: 'Pedidos',
@@ -42,7 +42,7 @@ export default function Conta({children}: Props) {
         const path = location.pathname;
 
         switch (path) {
-            case '/conta/enderecos':
+            case '/conta/endereco':
                 setTopicoAtual('Endereços');
                 break;
             case '/conta/pedidos':
@@ -64,7 +64,7 @@ export default function Conta({children}: Props) {
             <section className="col-1 fixed top-36 left-[10%] right-[65%] flex flex-col gap-4">
                 {topicos.map((topico) => 
                     <article 
-                    className={`${topicoAtual === topico.nome ? 'font-medium' : 'font-light'} font-[Poppins] text-sm cursor-pointer`} 
+                    className={`${topicoAtual === topico.nome ? 'font-medium' : 'font-light'} font-[Poppins] text-sm transition-colors duration-200 hover:text-neutral-700 cursor-pointer`} 
                     onClick={() => {
                         setTopicoAtual(topico.nome);
                         navigate(topico.navigate);

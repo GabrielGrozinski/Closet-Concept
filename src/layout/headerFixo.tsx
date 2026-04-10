@@ -3,6 +3,7 @@ import { contextFavoritos } from "../context/favoritesContext";
 import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { contextCart } from "../context/cartContext";
+import { contextAuth } from "../context/authContext";
 
 
 const produtos = [
@@ -129,6 +130,7 @@ imagem?: string;
 
 export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual, setTopicoAtual, setMostrarCarrinho, setMostrarLogin}: Props) {
     const {carrinhoQuantidade} = contextCart();
+    const {user} = contextAuth();
     const {setMenuAberto, menuAberto} = contextFavoritos();
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
@@ -295,7 +297,7 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
                             </div>
                         </section>
 
-                        <div className={`transition-all duration-0 lg:duration-150 relative xl:max-h-20 xl:min-h-20 ${mostrarSearch ? 'xl:translate-x-0 opacity-100 lg:opacity-0 xl:opacity-100 xl:pointer-events-auto xl:relative xl:duration-300' : 'xl:translate-x-20 opacity-0 lg:opacity-100 xl:opacity-0 xl:pointer-events-none xl:absolute max-h-0 min-h-0 xl:duration-0'} lg:min-h-20 lg:max-h-20 flex items-center`}>
+                        <div className={`transition-all duration-0 lg:duration-150 relative xl:max-h-20 xl:min-h-20 ${mostrarSearch ? 'xl:translate-x-0 opacity-100 lg:opacity-0 xl:opacity-100 pointer-events-auto xl:relative xl:duration-300' : 'xl:translate-x-20 opacity-0 lg:opacity-100 xl:opacity-0 pointer-events-none xl:absolute max-h-0 min-h-0 xl:duration-0'} lg:min-h-20 lg:max-h-20 flex items-center`}>
 
                             <Search className="absolute left-3 top-1/2 -translate-y-[50%] text-zinc-500" size={20}/>
                             <input
@@ -370,8 +372,8 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
                         </div>
 
                         {/* User */}
-                        <div className="lg:flex flex-col hidden items-center justify-center">
-                            <button onClick={() => setMostrarLogin(true)} className="h-14 gap-1 w-14 lg:flex flex-col items-center justify-center text-[#2C2C2C] hover:text-[#C4B5A0] transition-colors hidden cursor-pointer">
+                        <div onClick={() => user ? navigate('/conta') : setMostrarLogin(true)} className="lg:flex flex-col hidden items-center justify-center">
+                            <button className="h-14 gap-1 w-14 lg:flex flex-col items-center justify-center text-[#2C2C2C] hover:text-[#C4B5A0] transition-colors hidden cursor-pointer">
                                 <span>
                                     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>

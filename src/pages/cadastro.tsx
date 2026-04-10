@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { EyeOff, Eye, Check, Ban, ArrowLeftCircle } from "lucide-react";
 import "../styles/login.css";
-import { useNavigate } from "react-router-dom";
 import { contextAuth } from "../context/authContext";
 import { ClipLoader } from "react-spinners";
 
@@ -12,7 +11,6 @@ interface Props {
 
 
 export default function Cadastro({setMostrarCadastro}: Props) {
-    const navigate = useNavigate();
     const {fazerCadastro} = contextAuth();
     const [loading, setLoading] = useState(false);
     const [requisitoMaiuscula, setRequisitoMaiuscula] = useState(false);
@@ -82,7 +80,7 @@ export default function Cadastro({setMostrarCadastro}: Props) {
     {
         name: "nome",
         label: "*Nome",
-        type: "email",
+        type: "text",
         value: form.nome,
     },
     {
@@ -179,10 +177,7 @@ export default function Cadastro({setMostrarCadastro}: Props) {
             console.log('valores', form.email, form.cpf, form.telefone, form.nome, form.sobrenome, form.data, form.senha)
             if (cadastroRealizado.success) {
                 console.log('cadastro bem realizado!');
-                window.scrollTo({
-                    top: 0
-                });
-                navigate("/");
+                window.location.reload();
             }
         } catch (erro) {
             console.error('Houve um erro', erro);

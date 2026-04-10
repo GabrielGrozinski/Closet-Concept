@@ -33,14 +33,14 @@ export default function Login({setMostrarLogin}: Props) {
             const cadastroRealizado = await fazerLogin(email, senha)
             if (cadastroRealizado.success) {
                 console.log('login bem realizado!');
-                window.scrollTo({
-                    top: 0
-                });
+                window.location.reload();
             } else {
                 setErroLogin(cadastroRealizado.error!);
+                alert('Erro');
             }
         } catch (erro) {
             console.error('Houve um erro', erro);
+            alert('Erro');
         } finally {
             setLoading(false);
         }
