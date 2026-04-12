@@ -28,24 +28,24 @@ export default function AuthContext({children}: Props) {
     const [user, setUser] = useState<User | null>(null);
     const [session, setSession] = useState<Session | null>(null);
 
-
-    async function pegarUser() {
-        const userAtual = (await supabase.auth.getUser()).data.user;
-        setUser(userAtual);
-    }
-
     useEffect(() => {
-        pegarUser();
-    }, [session]);
-    // Pega user;
+        supabase.auth.getSession()
+        .then(( {data: { session } }) => setSession(session ?? null))
+        .catch(( {error} ) => console.error("Houve um erro ao buscar a sessão", error))
 
-    async function pegarSession() {
-        const sessionAtual = (await supabase.auth.getSession()).data.session;
-        setSession(sessionAtual);
-    }
+        supabase.auth.getUser()
+        .then(( {data: { user } }) => setUser(user ?? null))
+        .catch(( { error } ) => console.error("Houve um erro ao buscar o usuário", error))
 
-    useEffect(() => {
-        pegarSession();
+        const {data: {subscription}} = 
+            supabase.auth.onAuthStateChange((_event, session) => {
+                setSession(session ?? null);
+                if (session) setUser(session.user)
+            });
+
+        return () => {
+            subscription.unsubscribe();
+        }
     }, []);
 
     async function fazerCadastroDatabase(email: string, cpf: string, telefone: string, nome: string, sobrenome: string, data_nascimento: string): Promise<PromiseReturn> {

@@ -9,8 +9,8 @@ type ItensCarrinho = {
     quantidade: number;
 }
 
-export default function Wishlist() {
 
+export default function TodosProdutos() {
     const itensCarrinhoBase: ItensCarrinho[] = [
         {
             id: '1',
@@ -70,13 +70,7 @@ export default function Wishlist() {
         }
     ];
 
-
     return (
-        <div className="min-h-screen bg-[rgba(250,249,247)] pt-4">
-            <h1 className="font-[Poppins] font-medium sm:text-2xl text-xl sm:ml-34 text-center sm:text-left mb-4">Lista de Desejos</h1>
-
-            <CardProduto itens={itensCarrinhoBase}/>
-            
-        </div>
+        <CardProduto itens={itensCarrinhoBase}/>
     )
 }

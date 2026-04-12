@@ -6,6 +6,8 @@ import Wishlist from "./pages/wishlist";
 import Conta from "./pages/conta";
 import DadosPessoais from "./layout/dadosPessoais";
 import Endereco from "./layout/endereco";
+import MainProdutos from "./pages/mainProdutos";
+import TodosProdutos from "./layout/todosProdutos";
 
 
 export function ScrollTop() {
@@ -30,6 +32,10 @@ export default function Rotas() {
                     <Route path="/conta" element={<Conta><Outlet/></Conta>}>
                         <Route index element={<DadosPessoais/>}/>
                         <Route path="endereco" element={<Endereco/>}/>
+                    </Route>
+
+                    <Route path="/produtos" element={<MainProdutos><Outlet/></MainProdutos>}>
+                        <Route index element={<TodosProdutos/>} />
                     </Route>
                 </Route>
 

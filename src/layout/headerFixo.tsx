@@ -4,7 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { contextCart } from "../context/cartContext";
 import { contextAuth } from "../context/authContext";
+import { Filter } from "lucide-react";
+import Select from "react-select";
 
+const options = [
+  { value: "mais_vendidos", label: "Mais vendidos" },
+  { value: "menor_preco", label: "Menor preço" },
+  { value: "maior_preco", label: "Maior preço" },
+  { value: "recentes", label: "Mais recentes" },
+];
 
 const produtos = [
 {
@@ -131,7 +139,7 @@ imagem?: string;
 export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual, setTopicoAtual, setMostrarCarrinho, setMostrarLogin}: Props) {
     const {carrinhoQuantidade} = contextCart();
     const {user} = contextAuth();
-    const {setMenuAberto, menuAberto} = contextFavoritos();
+    const {setMenuAberto, menuAberto, mostrarFiltro} = contextFavoritos();
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
     const [cliqueForaSearch, setCliqueForaSearch] = useState(false);
@@ -223,7 +231,7 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
     return (
         <>
 
-            <header onMouseLeave={() => setTopicoAtual(null)} className={`fixed left-0 top-7 right-0 z-999 bg-[rgba(250,249,247)] transition-all duration-300 lg:pb-1 lg:pt-0 lg:min-h-19 lg:max-h-20 max-h-30 min-h-15 ${mostrarSearch ? 'pb-4' : 'pb-0'} xl:border-b xl:border-b-[rgba(147,135,117,0.1)]`}>
+            <header onMouseLeave={() => setTopicoAtual(null)} className={`fixed left-0 top-7 right-0 z-999 bg-[rgba(250,249,247)] transition-all duration-300 lg:pb-1 lg:pt-0 lg:min-h-19 lg:max-h-20 min-h-15 ${mostrarSearch ? 'pb-4 max-h-30' : 'pb-0 max-h-15'} xl:border-b xl:border-b-[rgba(147,135,117,0.1)]`}>
 
                 <div className="max-w-360 mx-auto lg:px-6 lg:min-h-20 lg:flex items-center lg:justify-between grid grid-cols-[12%_1fr_20%] min-[500px]:grid-cols-[20%_1fr_20%] lg:grid-rows-1 grid-rows-[1fr_auto] pt-2 justify-items-center px-[5%] gap-4 lg:gap-2">
 
@@ -255,7 +263,7 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
                     </div>
 
                     {/* Nav */}
-                    <nav className={`flex-1 px-[1%] relative row-2 lg:row-1 lg:max-h-20 max-h-10 lg:min-h-20 lg:min-w-0 col-span-full min-w-full ${mostrarSearch ? 'lg:px-[10%]' : ''} -mb-1 lg:mb-0 xl:-mt-2`}>
+                    <nav className={`flex-1 px-[1%] relative row-2 lg:row-1 lg:max-h-20 lg:min-h-20 lg:min-w-0 col-span-full min-w-full ${mostrarSearch ? 'lg:px-[10%]' : ''} -mb-1 lg:mb-0 xl:-mt-2`}>
 
                         <section className={`hidden top-22 fixed left-0 right-0 xl:top-0 xl:absolute lg:flex flex-wrap transition-all duration-150 justify-center px-4 gap-8 min-h-20 max-h-20 items-center ${mostrarSearch ? 'xl:pointer-events-none xl:opacity-0 xl:-left-1/2' : 'xl:left-0 xl:right-0 xl:opacity-100 xl:pointer-events-auto'}`}>
                             {topicos.map((topico, index) =>
@@ -335,7 +343,63 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
                                 </button>
                             </div>
                         </section>
+
                     </nav>
+
+                    {/* Filtro */}
+                    <div className={`grid fixed grid-cols-2 bg-[rgba(250,249,247)] min-w-full gap-2 px-4 font-[Poppins] transition-all duration-300 items-end border-b border-b-black/8 pb-4 z-1000 ${!mostrarSearch ? 'top-21' : 'top-34'} ${mostrarFiltro ? 'max-h-0 min-h-0 opacity-0 pointer-events-none' : 'min-h-20 max-h-20 pointer-events-auto'}`}>
+                        <button className="min-w-full flex items-center justify-between p-2 bg-white border border-[#e5e7eb] rounded-lg font-semibold text-sm min-h-11 max-h-11">
+                            Filtrar
+                            <Filter size={16}/>
+                        </button>
+
+                        <Select
+                            isSearchable={false}
+                            options={options}
+                            placeholder="Ordenar por"
+                            styles={{
+                            control: (base) => ({
+                                ...base,
+                                borderRadius: "8px",
+                                border: "1px solid #e5e7eb",
+                                padding: "2px 6px",
+                                boxShadow: "none",
+                                cursor: "pointer",
+                                maxHeight: '44px',
+                                minHeight: '44px'
+                            }),
+                            singleValue: (base) => ({
+                                ...base,
+                                color: "#222222",
+                                fontSize: "14px",
+                                fontWeight: "600",
+                            }),
+                            option: (base, state) => ({
+                                ...base,
+                                color: state.isSelected ? "white" : "#111827",
+                                backgroundColor: state.isSelected
+                                    ? "#111827"
+                                    : state.isFocused
+                                    ? "#f3f4f6"
+                                    : "white",
+                                fontSize: "14px",
+                                }),
+
+                            placeholder: (base) => ({
+                                ...base,
+                                color: "#222222",
+                                fontWeight: '600',
+                                fontSize: "14px",
+                                }),
+                            menu: (base) => ({
+                                ...base,
+                                borderRadius: "8px",
+                                overflow: "hidden",
+                            }),
+                            }}
+                            onChange={(opcao) => console.log(opcao)}
+                        />
+                    </div>
 
                     {/* Actions */}
                     <div className="justify-self-end flex items-center lg:gap-6 gap-2 scale-80 -mr-[10%] sm:scale-100 sm:mr-0">
@@ -408,6 +472,8 @@ export default function HeaderFixo({mostrarSearch, setMostrarSearch, topicoAtual
                 </div>
 
             </header>
+
+
 
             <header className="bg-[rgba(250,249,247)] hidden lg:block xl:hidden fixed z-20 top-26.5 lg:min-h-12 lg:max-h-12 min-h-6 max-h-6 left-0 right-0 border-b border-[rgba(147,135,117,0.3)]">
 

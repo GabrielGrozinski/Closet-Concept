@@ -14,7 +14,7 @@ export default function Conta({children}: Props) {
     const {session} = contextAuth();
 
     useEffect(() => {
-        if (session) navigate('/');
+        if (!session) navigate('/');
     }, [session]);
 
     const topicos = [
