@@ -4,7 +4,9 @@ import FooterFixo from "./footerFixo";
 import { useEffect, useState } from "react";
 import MenuAberto from "./menuAberto";
 import CarrinhoDeCompras from "./carrinhoCompras";
-import Login from "../pages/login";
+import Login from "./login";
+import FiltroModal from "./filtroModal";
+import { contextFavoritos } from "../context/favoritesContext";
 
 interface Props {
     children: ReactNode;
@@ -19,10 +21,10 @@ imagem?: string;
 };
 
 export default function PaginaPadrao({children}: Props) {
+    const {mostrarFiltroModal, mostrarSearch} = contextFavoritos();
     const [topicoAtual, setTopicoAtual] = useState<Topico | null>(null);
     const [mostrarLogin, setMostrarLogin] = useState(false);
     const [mostrarCarrinho, setMostrarCarrinho] = useState(false);
-    const [mostrarSearch, setMostrarSearch] = useState(false);
     const [largura, setLargura] = useState(window.innerWidth);
     const root = window.document.documentElement;
     root.style.transition = 'all 0.3s';
@@ -40,9 +42,13 @@ export default function PaginaPadrao({children}: Props) {
 
     return (
         <>
-            <header className="fixed top-0 min-h-7 max-h-7 left-0 right-0 bg-[#C4B5A0] z-1001 flex items-center justify-center">
-                <h1 className="text-white text-[12px] text-shadow-xs font-medium tracking-widest">FRETE GRÁTIS ATÉ O FIM DE ABRIL</h1>
-            </header>
+            {!mostrarFiltroModal &&
+                <header className="fixed top-0 min-h-7 max-h-7 left-0 right-0 bg-[#C4B5A0] z-1001 flex items-center justify-center">
+                    <h1 className="text-white text-[12px] text-shadow-xs font-medium tracking-widest">FRETE GRÁTIS ATÉ O FIM DE ABRIL</h1>
+                </header>
+            }
+
+            <FiltroModal/>
 
             <MenuAberto setMostrarLogin={setMostrarLogin}/>
 
@@ -59,7 +65,7 @@ export default function PaginaPadrao({children}: Props) {
 
             <CarrinhoDeCompras mostrarCarrinho={mostrarCarrinho} setMostrarCarrinho={setMostrarCarrinho}/>
 
-            <HeaderFixo mostrarSearch={mostrarSearch} setMostrarSearch={setMostrarSearch} topicoAtual={topicoAtual} setTopicoAtual={setTopicoAtual} mostrarCarrinho={mostrarCarrinho} setMostrarCarrinho={setMostrarCarrinho} setMostrarLogin={setMostrarLogin}/>
+            <HeaderFixo topicoAtual={topicoAtual} setTopicoAtual={setTopicoAtual} mostrarCarrinho={mostrarCarrinho} setMostrarCarrinho={setMostrarCarrinho} setMostrarLogin={setMostrarLogin}/>
 
             {children}
 
