@@ -129,9 +129,9 @@ imagem?: string;
 export default function HeaderFixo({topicoAtual, setTopicoAtual, setMostrarCarrinho, setMostrarLogin}: Props) {
     const {carrinhoQuantidade} = contextCart();
     const {user} = contextAuth();
-    const {setMenuAberto, menuAberto, mostrarSearch, setMostrarSearch} = contextFavoritos();
+    const {setMenuAberto, menuAberto, mostrarSearch, setMostrarSearch, search, setSearch} = contextFavoritos();
     const navigate = useNavigate();
-    const [search, setSearch] = useState('');
+    
     const [cliqueForaSearch, setCliqueForaSearch] = useState(false);
     
     

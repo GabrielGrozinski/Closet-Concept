@@ -24,7 +24,7 @@ export default function MenuAberto({setMostrarLogin}: Props) {
     const {menuAberto, setMenuAberto} = contextFavoritos();
     
     const topicos: Topico[] = [
-    { nome: "Todos os Produtos", navigate: "/" },
+    { nome: "Todos os Produtos", navigate: "/produtos" },
 
     { 
         nome: "Vestidos", 
@@ -88,6 +88,11 @@ export default function MenuAberto({setMostrarLogin}: Props) {
     ];
     const [topicoAtual, setTopicoAtual] = useState<Topico | null>(null);
 
+    function navegar(rota: string) {
+        setMenuAberto(false);
+        navigate(rota);
+    }
+
 
     return (
         <div className={`z-1000 fixed left-0 top-0 transition-all duration-400 max-h-screen min-h-screen ${menuAberto ? 'min-w-full max-w-full pointer-events-auto' : 'min-w-0 max-w-0 pointer-events-none'} flex flex-col overflow-hidden bg-white`}>
@@ -128,7 +133,7 @@ export default function MenuAberto({setMostrarLogin}: Props) {
                         <div key={index} className="py-2">
                             <article 
                                 onClick={() => 
-                                    setTopicoAtual(produto)
+                                    produto.nome === 'Todos os Produtos' ? navegar(produto.navigate) : setTopicoAtual(produto)
                                 } 
                                 className="active:bg-blue-100 uppercase font-[Poppins] tracking-[1px] transition-colors duration-100 py-3 relative text-[#222222] pl-6">{produto.nome}
                             </article>

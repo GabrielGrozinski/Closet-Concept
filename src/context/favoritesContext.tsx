@@ -13,6 +13,9 @@ interface FavoritosType {
     setMostrarFiltroModal: (v: boolean) => void;
     mostrarSearch: boolean;
     setMostrarSearch: (v: boolean) => void;
+    search: string;
+    setSearch: (v: string) => void;
+    
 }
 
 interface Props {
@@ -25,6 +28,7 @@ export default function FavoritosContext({children}: Props) {
     const [id, setId] = useState('');
     const [menuAberto, setMenuAberto] = useState(false);
     const [mostrarLogin, setMostrarLogin] = useState(false);
+    const [search, setSearch] = useState('');
     const [mostrarSearch, setMostrarSearch] = useState(false);
     const [mostrarFiltro, setMostrarFiltro] = useState(true);
     const [mostrarFiltroModal, setMostrarFiltroModal] = useState(false);
@@ -45,7 +49,9 @@ export default function FavoritosContext({children}: Props) {
                 mostrarFiltroModal,
                 setMostrarFiltroModal,
                 mostrarSearch,
-                setMostrarSearch
+                setMostrarSearch,
+                search,
+                setSearch
             }}
         >
             {children}

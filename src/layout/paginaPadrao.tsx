@@ -7,6 +7,8 @@ import CarrinhoDeCompras from "./carrinhoCompras";
 import Login from "./login";
 import FiltroModal from "./filtroModal";
 import { contextFavoritos } from "../context/favoritesContext";
+import { FiltroOrdemFixo } from "../components/filtro-e-ordem";
+
 
 interface Props {
     children: ReactNode;
@@ -36,16 +38,20 @@ export default function PaginaPadrao({children}: Props) {
     }, [window.innerWidth]);
 
     useEffect(() => {
-        root.style.overflowY = mostrarCarrinho ? 'hidden' : 'auto';
-    }, [mostrarCarrinho]);
+        root.style.overflowY = (mostrarCarrinho || mostrarFiltroModal) ? 'hidden' : 'auto';
+    }, [mostrarCarrinho, mostrarFiltroModal]);
 
 
     return (
         <>
             {!mostrarFiltroModal &&
+                <>
                 <header className="fixed top-0 min-h-7 max-h-7 left-0 right-0 bg-[#C4B5A0] z-1001 flex items-center justify-center">
                     <h1 className="text-white text-[12px] text-shadow-xs font-medium tracking-widest">FRETE GRÁTIS ATÉ O FIM DE ABRIL</h1>
                 </header>
+
+                <FiltroOrdemFixo/>
+                </>
             }
 
             <FiltroModal/>
