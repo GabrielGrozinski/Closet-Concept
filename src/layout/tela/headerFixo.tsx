@@ -1,9 +1,9 @@
 import { X, Menu, Search, ChevronRight, MoveRight } from "lucide-react";
-import { contextFavoritos } from "../context/favoritesContext";
+import { contextFavoritos } from "../../context/favoritesContext";
 import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { contextCart } from "../context/cartContext";
-import { contextAuth } from "../context/authContext";
+import { contextCart } from "../../context/cartContext";
+import { contextAuth } from "../../context/authContext";
 
 
 const produtos = [

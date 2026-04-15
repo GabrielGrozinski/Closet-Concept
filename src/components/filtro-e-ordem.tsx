@@ -143,7 +143,7 @@ export function Ordenar() {
 
                 <nav className="flex flex-wrap gap-2 items-center">
                 {filtros.map((filtro) =>
-                    <span onClick={() => {
+                    <span key={filtro} onClick={() => {
                         const filtrosNew = filtros.filter((f) => f !== filtro);
                         localStorage.setItem('produtos_filtro', JSON.stringify(filtrosNew));
                         setFiltros(filtrosNew);

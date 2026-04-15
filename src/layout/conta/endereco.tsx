@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../auth/supabase-client";
-import { contextAuth } from "../context/authContext";
+import { supabase } from "../../auth/supabase-client";
+import { contextAuth } from "../../context/authContext";
 
 
 

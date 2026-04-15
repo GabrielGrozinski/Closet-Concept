@@ -1,8 +1,9 @@
 import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { contextFavoritos } from "../context/favoritesContext";
 import { FiltroOrdemMobile, Ordenar } from "../components/filtro-e-ordem";
-import { FiltrosTopico } from "../layout/filtroModal";
+import { FiltrosTopico } from "../layout/filtroLayout";
+import { useLocation } from "react-router-dom";
 
 
 interface Props {
@@ -10,11 +11,16 @@ interface Props {
 }
 
 
-
 export default function MainProdutos({children}: Props) {
+    const location = useLocation();
+    const pathName = useMemo(() => {
+        return location.pathname.replace('/', '');
+    }, [location]);
     const filtroRef = useRef<HTMLDivElement | null>(null);
     const {setMostrarFiltro} = contextFavoritos();
-    const localEscolhido = localStorage.getItem('produtos_filtro');
+    const localEscolhido = useMemo(() => {
+        return localStorage.getItem(`${pathName}_filtros`);
+    }, [pathName]); 
     const [filtros, setFiltros] = useState<string[] | null>(() => localEscolhido ? JSON.parse(localEscolhido) : null);
 
     useEffect(() => {

@@ -2,12 +2,12 @@ import type { ReactNode } from "react";
 import HeaderFixo from "./headerFixo";
 import FooterFixo from "./footerFixo";
 import { useEffect, useState } from "react";
-import MenuAberto from "./menuAberto";
-import CarrinhoDeCompras from "./carrinhoCompras";
-import Login from "./login";
-import FiltroModal from "./filtroModal";
-import { contextFavoritos } from "../context/favoritesContext";
-import { FiltroOrdemFixo } from "../components/filtro-e-ordem";
+import MenuAberto from "../menuAberto";
+import CarrinhoDeCompras from "../carrinhoCompras";
+import Login from "../login";
+import FiltroModal from "../filtroLayout";
+import { contextFavoritos } from "../../context/favoritesContext";
+import { FiltroOrdemFixo } from "../../components/filtro-e-ordem";
 
 
 interface Props {

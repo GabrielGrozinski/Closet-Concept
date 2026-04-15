@@ -1,4 +1,4 @@
-import CardProduto from "../layout/produtos";
+import CardProduto from "../components/produtos";
 
 type ItensCarrinho = {
     id: string;

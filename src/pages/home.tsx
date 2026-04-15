@@ -13,9 +13,11 @@ import {
     Send,
 } from "lucide-react";
 import { observerHome } from "../hooks/observer";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Home() {
+    const navigate = useNavigate();
     const itemsCategoria = [
         {
             icone: Gem,
@@ -143,7 +145,7 @@ export default function Home() {
                     </p>
 
                     {/* CTA */}
-                    <button className="inline-flex cursor-pointer items-center gap-2 bg-[#dfc5a3] text-[#FAF9F7] text-sm font-medium uppercase tracking-[1px] px-12 py-4 rounded-md transition-all duration-300 hover:bg-[#e9c89e] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(196,181,160,0.3)]">
+                    <button onClick={() => navigate('/produtos')} className="inline-flex cursor-pointer items-center gap-2 bg-[#dfc5a3] text-[#FAF9F7] text-sm font-medium uppercase tracking-[1px] px-12 py-4 rounded-md transition-all duration-300 hover:bg-[#e9c89e] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(196,181,160,0.3)]">
                     Explorar Coleção
                         <MoveRight />
                     </button>

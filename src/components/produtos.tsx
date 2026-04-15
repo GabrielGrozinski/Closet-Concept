@@ -95,7 +95,8 @@ export default function CardProduto({itens}: Props) {
             >
             {itens.map((item) => 
                 <article 
-                    className="grid sm:grid-rows-[280px_auto] grid-rows-[180px_auto] sm:min-w-62 sm:max-w-62 min-w-full max-w-full overflow-hidden gap-3 shadow-lg border border-[#22222212] cursor-pointer transition-all duration-300 rounded-md relative sm:max-h-114 sm:min-h-114 min-h-92 max-h-96"
+                    key={item.id}
+                    className="grid sm:grid-rows-[280px_auto] grid-rows-[180px_auto] sm:min-w-62 sm:max-w-62 min-w-full max-w-full overflow-hidden gap-3 shadow-lg border border-[#22222212] cursor-pointer transition-all duration-300 rounded-md relative sm:max-h-114 sm:min-h-114 min-h-92 max-h-96 hover:shadow-2xl hover:border-[#22222216]"
                 >
                     <img 
                         className="sm:min-h-70 sm:max-h-70 min-h-45 max-h-45 sm:min-w-62 min-w-[45vw] max-w-[45vw] object-cover" 

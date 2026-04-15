@@ -13,7 +13,7 @@ navigate: string;
 export function FiltrosTopico() {
     const location = useLocation();
     const navigate = useNavigate();
-    const pathName = location.pathname.split('/')[1];
+    const pathName = location.pathname.replace('/', '').trim();
     const {mostrarFiltroModal} = contextFavoritos();
     const [filtroProdutos, setFiltroProdutos] = useState<string[]>(() => {
         const filtroEscolhido = localStorage.getItem(`${pathName}_filtro`);
@@ -26,18 +26,25 @@ export function FiltrosTopico() {
     const [valorMinimo, setValorMinimo] = useState(() => {
         const filtroEscolhido = localStorage.getItem(`${pathName}_filtro`);
         const todosFiltros: string[] = filtroEscolhido ? JSON.parse(filtroEscolhido) : [];
-        const existeValor = todosFiltros.some((f) => f.split('R$').length > 0);
+        const existeValor = todosFiltros.some((f) => f.includes('R$'));
         if (!existeValor) {
             return 0;
         }
-        const minimo = (todosFiltros.filter((f) => f.split('R$').length > 0));
+        const minimo = (todosFiltros.filter((f) => f.includes('R$')));
 
-        if (minimo[0].split('R$')[0] === 'De ') {
-            return Number(minimo[0].split('R$')[1]);
-        } else if (minimo[0] === 'Até ') {
+        const filtroPreco = minimo[0];
+
+        if (filtroPreco.startsWith('De R$')) {
+            return Number(filtroPreco.replace('De R$', '').trim());
+        } else if (filtroPreco.startsWith('Até R$')) {
             return 0;
-        } else if (minimo[0].split(' a ').length > 1) {
-            return Number(minimo[0].split(' a ')[0].split('R$')[1]);
+        } else if (filtroPreco.includes(' a R$')) {
+            const minMax = filtroPreco
+            .replace("R$", "")
+            .split(" a ")
+            .map((v) => v.trim());
+
+            return Number(minMax[0]);
         } else {
             return 0;
         }
@@ -45,20 +52,27 @@ export function FiltrosTopico() {
     });
 
     const [valorMaximo, setValorMaximo] = useState(() => {
-       const filtroEscolhido = localStorage.getItem(`${pathName}_filtro`);
+        const filtroEscolhido = localStorage.getItem(`${pathName}_filtro`);
         const todosFiltros: string[] = filtroEscolhido ? JSON.parse(filtroEscolhido) : [];
-        const existeValor = todosFiltros.some((f) => f.split('R$').length > 0);
+        const existeValor = todosFiltros.some((f) => f.includes('R$'));
         if (!existeValor) {
             return 0;
         }
-        const minimo = (todosFiltros.filter((f) => f.split('R$').length > 0));
+        const maximo = (todosFiltros.filter((f) => f.includes('R$')));
 
-        if (minimo[0].split('R$')[0] === 'De ') {
+        const filtroPreco = maximo[0];
+
+        if (filtroPreco.startsWith('De R$')) {
             return 0;
-        } else if (minimo[0].split('R$')[0] === 'Até ') {
-            return Number(minimo[0].split('R$')[1]);
-        } else if (minimo[0].split(' a ').length > 1) {
-            return Number(minimo[0].split(' a ')[1].split('R$')[1]);
+        } else if (filtroPreco.startsWith('Até R$')) {
+            return Number(filtroPreco.replace('Até R$', '').trim());
+        } else if (filtroPreco.includes(' a R$')) {
+            const minMax = filtroPreco
+            .replace("R$", "")
+            .split(" a ")
+            .map((v) => v.trim());
+
+            return Number(minMax[1]);
         } else {
             return 0;
         }
@@ -351,7 +365,6 @@ export function FiltrosTopico() {
 
 export default function FiltroModal() {
     const {mostrarFiltroModal, setMostrarFiltroModal} = contextFavoritos();
-
 
     return (
         <div className={`z-1000 fixed right-0 top-0 transition-all duration-400 max-h-screen min-h-screen ${mostrarFiltroModal ? 'min-w-full max-w-full pointer-events-auto' : 'min-w-0 max-w-0 pointer-events-none'} flex flex-col overflow-hidden bg-white`}>

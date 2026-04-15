@@ -1,12 +1,12 @@
 import { HashRouter, Route, Routes, Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import Home from "./pages/home";
-import PaginaPadrao from "./layout/paginaPadrao";
+import PaginaPadrao from "./layout/tela/paginaPadrao";
 import Wishlist from "./pages/wishlist";
 import Conta from "./pages/conta";
-import DadosPessoais from "./layout/dadosPessoais";
-import Endereco from "./layout/endereco";
-import MainProdutos from "./pages/mainProdutos";
+import DadosPessoais from "./layout/conta/dadosPessoais";
+import Endereco from "./layout/conta/endereco";
+import MainProdutos from "./pages/baseProdutos";
 import TodosProdutos from "./layout/todosProdutos";
 
 

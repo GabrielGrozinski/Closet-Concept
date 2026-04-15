@@ -3,7 +3,7 @@ import { EyeOff, Eye, X } from "lucide-react";
 import "../styles/login.css";
 import { contextAuth } from "../context/authContext";
 import { ClipLoader } from "react-spinners";
-import Cadastro from "./cadastro";
+import Cadastro from "../components/cadastro";
 
 
 interface Props {
