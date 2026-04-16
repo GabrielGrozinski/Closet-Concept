@@ -1,81 +1,66 @@
+import { useEffect, useState } from "react";
 import CardProduto from "../components/produtos";
+import { contextFavoritos } from "../context/favoritesContext";
+import { contextAuth } from "../context/authContext";
+import { supabase } from "../auth/supabase-client";
 
-type ItensCarrinho = {
+type ItensBase = {
     id: string;
     nome: string;
     imagem: string;
     precoOriginal: number;
     precoAtual: number;
-    quantidade: number;
+    tamanho: string;
+    cor: string;
 }
 
 export default function Wishlist() {
+    const {user, session} = contextAuth();
+    const {buscarFavoritos, setMostrarLogin} = contextFavoritos();
+    const [itens, setItens] = useState<ItensBase[]>([]);
+    const [hasFavoritos, setHasFavoritos] = useState(false);
 
-    const itensCarrinhoBase: ItensCarrinho[] = [
-        {
-            id: '1',
-            nome: "Vestido curto rosa",
-            imagem: "https://images.unsplash.com/photo-1542295669297-4d352b042bca?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 119.90,
-            precoAtual: 110.00,
-            quantidade: 1
-        },
-        {
-            id: '2',
-            nome: "Blusa feminina branca",
-            imagem: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 79.90,
-            precoAtual: 69.90,
-            quantidade: 1
-        },
-        {
-            id: '3',
-            nome: "Calça jeans skinny",
-            imagem: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 149.90,
-            precoAtual: 129.90,
-            quantidade: 1
-        },
-        {
-            id: '4',
-            nome: "Jaqueta jeans azul",
-            imagem: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 199.90,
-            precoAtual: 179.90,
-            quantidade: 1
-        },
-        {
-            id: '5',
-            nome: "Saia midi floral",
-            imagem: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 99.90,
-            precoAtual: 89.90,
-            quantidade: 1
-        },
-        {
-            id: '6',
-            nome: "Bolsa feminina preta",
-            imagem: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 159.90,
-            precoAtual: 139.90,
-            quantidade: 1
-        },
-        {
-            id: '7',
-            nome: "Camisa social azul",
-            imagem: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 129.90,
-            precoAtual: 109.90,
-            quantidade: 1
+    useEffect(() => {
+        if (!session) {
+            setMostrarLogin(true);
         }
-    ];
+    }, [session]);
 
+    useEffect(() => {
+        if (!user) return;
+        const handleFavoritos = async () => {
+            const favoritos = await buscarFavoritos(user);
+            if (!favoritos || favoritos.length === 0) return setHasFavoritos(false);
+
+            const {data, error} = await supabase
+                .from('produtos')
+                .select('*')
+                .in('id', favoritos);
+            
+            if (error) {
+                console.error('Houve um erro', error);
+                return setHasFavoritos(false);
+            }
+
+            console.log('data', data);
+
+            setItens(data);
+            setHasFavoritos(true);
+        };
+
+        handleFavoritos();
+    }, []);
 
     return (
         <div className="min-h-screen bg-[rgba(250,249,247)] pt-4">
             <h1 className="font-[Poppins] font-medium sm:text-2xl text-xl sm:ml-34 text-center sm:text-left mb-4">Lista de Desejos</h1>
-
-            <CardProduto itens={itensCarrinhoBase}/>
+            {hasFavoritos ?
+            <CardProduto itens={itens}/>
+            :
+            <h1 onClick={() => setMostrarLogin(true)} className="text-center font-bold font-[Poppins] text-xl mt-[35vh]">
+                Adicione algum produto à sua lista de favoritos
+            </h1>
+            }
             
         </div>
     )

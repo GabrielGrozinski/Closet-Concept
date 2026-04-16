@@ -3,47 +3,34 @@ import { useState, useEffect } from "react";
 import { contextCart } from "../context/cartContext";
 import { contextAuth } from "../context/authContext";
 import { supabase } from "../auth/supabase-client";
+import { contextFavoritos } from "../context/favoritesContext";
 
 
-type ItensCarrinho = {
+type ItensBase = {
     id: string;
     nome: string;
     imagem: string;
     precoOriginal: number;
     precoAtual: number;
-    quantidade: number;
+    tamanho: string;
+    cor: string;
 }
 
 interface Props {
-    itens: ItensCarrinho[];
+    itens: ItensBase[];
 }
 
 
 export default function CardProduto({itens}: Props) {
     const { session, user } = contextAuth();
     const {adicionarItemCarrinho} = contextCart();
+    const {buscarFavoritos} = contextFavoritos();
     const [favoritos, setFavoritos] = useState(['']);
 
     useEffect(() => {
         if (!user) return;
-        buscarFavoritos()
+        buscarFavoritos(user).then((f) => setFavoritos(f));
     }, [user]);
-
-    async function buscarFavoritos() {
-        
-        const {data, error} = await supabase
-            .from('usuarios')
-            .select('favoritos')
-            .eq('id', user?.id);
-
-        const tags: string[] = data ? data[0].favoritos : [];
-        
-        if (error) {
-            console.error('Houve um erro', error);
-        }
-
-        setFavoritos(tags ?? []);
-    }
 
     async function adicionarFavoritos(id: string) {
         if (!user) return;
@@ -91,15 +78,15 @@ export default function CardProduto({itens}: Props) {
         <div className="p-4">
             <main
             style={{ rowGap: '46px' }}
-            className="grid sm:px-4 sm:gap-10 justify-center sm:grid-cols-[repeat(auto-fit,minmax(252px,252px))] grid-cols-2 gap-2"
+            className="grid sm:px-4 sm:gap-10 justify-center sm:grid-cols-[repeat(auto-fit,minmax(222px,222px))] grid-cols-2 gap-2"
             >
             {itens.map((item) => 
                 <article 
                     key={item.id}
-                    className="grid sm:grid-rows-[280px_auto] grid-rows-[180px_auto] sm:min-w-62 sm:max-w-62 min-w-full max-w-full overflow-hidden gap-3 shadow-lg border border-[#22222212] cursor-pointer transition-all duration-300 rounded-md relative sm:max-h-114 sm:min-h-114 min-h-92 max-h-96 hover:shadow-2xl hover:border-[#22222216]"
+                    className="grid sm:grid-rows-[280px_auto] grid-rows-[180px_auto] sm:min-w-56 sm:max-w-56 min-w-full max-w-full overflow-hidden gap-3 shadow-lg border border-[#22222212] cursor-pointer transition-all duration-300 rounded-md relative sm:max-h-114 sm:min-h-114 min-h-92 max-h-96 hover:shadow-2xl hover:border-[#22222216]"
                 >
                     <img 
-                        className="sm:min-h-70 sm:max-h-70 min-h-45 max-h-45 sm:min-w-62 min-w-[45vw] max-w-[45vw] object-cover" 
+                        className="sm:min-h-70 sm:max-h-70 min-h-45 max-h-45 sm:min-w-56 sm:max-w-56 min-w-[45vw] max-w-[45vw] object-cover" 
                         src={item.imagem} 
                         alt="" 
                     />
@@ -122,14 +109,14 @@ export default function CardProduto({itens}: Props) {
                         />
                     </span>
 
-                    <div className="flex flex-col py-0 font-[Poppins] sm:text-xs text-[10px] sm:px-6 px-3">
+                    <div className="flex flex-col py-0 font-[Poppins] sm:text-xs text-[10px] sm:px-2 px-3">
                         <h1 className="mb-2 font-light text-center sm:text-sm text-[10px]">
                             {item.nome}
                         </h1>
 
                         <span className="flex sm:flex-row flex-col justify-center gap-[5%] min-w-full items-center mb-2">
                             {item.precoOriginal &&
-                                <h2 className="sm:text-lg text-sm font-light line-through sm:translate-y-[1.5px]">
+                                <h2 className="sm:text-base text-sm font-light line-through">
                                     {item.precoOriginal.toLocaleString('pt-BR', {
                                         style: 'currency',
                                         currency: 'BRL'
@@ -137,7 +124,7 @@ export default function CardProduto({itens}: Props) {
                                 </h2>
                             }
 
-                            <h2 className="font-bold sm:text-2xl text-lg">
+                            <h2 className="font-bold sm:text-xl text-lg">
                                 {item.precoAtual.toLocaleString('pt-BR', {
                                     style: 'currency',
                                     currency: 'BRL'
@@ -163,7 +150,7 @@ export default function CardProduto({itens}: Props) {
 
                         <div className="grid sm:grid-cols-2 grid-cols-[25%_1fr] mt-4 items-center justify-items-center gap-2">
                             <button 
-                                onClick={() => adicionarItemCarrinho(item)} 
+                                onClick={() => adicionarItemCarrinho({...item, quantidade: 1})} 
                                 className="min-w-full max-w-full bg-[#f8ebdc] border border-black/6 p-2 sm:rounded-xl rounded-full text-zinc-900 text-shadow-lg flex items-center justify-center transition-colors duration-200 hover:opacity-80 cursor-pointer sm:min-h-8 sm:max-h-8"
                             > 
                                 <ShoppingCart className="sm:max-h-4.5 sm:max-w-4.5 max-w-4 max-h-4"/> 

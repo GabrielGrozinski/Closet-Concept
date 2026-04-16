@@ -1,14 +1,7 @@
 import { Filter, X } from "lucide-react";
 import { contextFavoritos } from "../context/favoritesContext"
 import Select from "react-select";
-import { useState } from "react";
-
-const options = [
-  { value: "mais_vendidos", label: "Mais vendidos" },
-  { value: "menor_preco", label: "Menor preço" },
-  { value: "maior_preco", label: "Maior preço" },
-  { value: "recentes", label: "Mais recentes" },
-];
+import { useState} from "react";
 
 export function FiltroOrdemFixo() {
     const {mostrarSearch, search, mostrarFiltro, setMostrarFiltroModal} = contextFavoritos();
@@ -132,7 +125,17 @@ export function FiltroOrdemMobile() {
   );
 }
 
+
+const options = [
+  { value: "mais_vendidos", label: "Mais vendidos" },
+  { value: "menor_preco", label: "Menor preço" },
+  { value: "maior_preco", label: "Maior preço" },
+  { value: "recentes", label: "Mais recentes" },
+  { value: "destaque", label: "Em destaque" },
+];
+
 export function Ordenar() {
+    const {setOrdem} = contextFavoritos();
     const localEscolhido = localStorage.getItem('produtos_filtro');
     const [filtros, setFiltros] = useState<string[] | null>(() => localEscolhido ? JSON.parse(localEscolhido) : null);
     
@@ -214,7 +217,11 @@ export function Ordenar() {
                 overflow: "hidden",
             }),
             }}
-            onChange={(opcao) => console.log(opcao)}
+            onChange={(opcao) => {
+                if (opcao) {
+                    setOrdem(opcao.value)
+                }
+            }}
         />
     </div>
   );

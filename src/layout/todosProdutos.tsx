@@ -1,6 +1,7 @@
 import CardProduto from "../components/produtos";
+import { contextFavoritos } from "../context/favoritesContext";
 import { obterFiltros, separarFiltros, filtroSupabase } from "../hooks/filtrosHooks";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type ItensCarrinho = {
     id: string;
@@ -13,7 +14,7 @@ type ItensCarrinho = {
     cor: string;
 }
 
-type ItensCarrinhoBase = {
+type ItensBase = {
     id: string;
     nome: string;
     imagem: string;
@@ -23,107 +24,162 @@ type ItensCarrinhoBase = {
     cor: string;
 }
 
+export const itensCarrinhoBase: ItensCarrinho[] = [ 
+    {
+        id: '1',
+        nome: "Vestido curto rosa",
+        imagem: "https://images.unsplash.com/photo-1542295669297-4d352b042bca?q=80&w=687&auto=format&fit=crop",
+        precoOriginal: 119.90,
+        precoAtual: 110.00,
+        quantidade: 1,
+        cor: 'Rosa',
+        tamanho: 'M'
+    },
+    {
+        id: '2',
+        nome: "Blusa feminina branca",
+        imagem: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=687&auto=format&fit=crop",
+        precoOriginal: 79.90,
+        precoAtual: 69.90,
+        quantidade: 1,
+        cor: 'Branco',
+        tamanho: 'P'
+    },
+    {
+        id: '3',
+        nome: "Calça jeans skinny",
+        imagem: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=687&auto=format&fit=crop",
+        precoOriginal: 149.90,
+        precoAtual: 129.90,
+        quantidade: 1,
+        cor: 'Azul',
+        tamanho: 'G'
+    },
+    {
+        id: '4',
+        nome: "Jaqueta jeans azul",
+        imagem: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=687&auto=format&fit=crop",
+        precoOriginal: 199.90,
+        precoAtual: 179.90,
+        quantidade: 1,
+        cor: 'Azul',
+        tamanho: 'GG'
+    },
+    {
+        id: '5',
+        nome: "Saia midi floral",
+        imagem: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?q=80&w=687&auto=format&fit=crop",
+        precoOriginal: 99.90,
+        precoAtual: 89.90,
+        quantidade: 1,
+        cor: 'Melancia',
+        tamanho: 'M'
+    },
+    {
+        id: '6',
+        nome: "Bolsa feminina preta",
+        imagem: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=687&auto=format&fit=crop",
+        precoOriginal: 159.90,
+        precoAtual: 139.90,
+        quantidade: 1,
+        cor: 'Preto',
+        tamanho: 'MM'
+    },
+    {
+        id: '7',
+        nome: "Camisa social azul",
+        imagem: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=687&auto=format&fit=crop",
+        precoOriginal: 129.90,
+        precoAtual: 109.90,
+        quantidade: 1,
+        cor: 'Vinho',
+        tamanho: 'XL'
+    }
+];
 
 export default function TodosProdutos() {
+    const {cores, tamanho, setTamanho, setCores, ordem} = contextFavoritos();
 
-    const [itens, setItens] = useState<ItensCarrinhoBase[]>([]);
+    const [itens, setItens] = useState<ItensBase[]>([]);
 
     useEffect(() => {
-    const carregar = async () => {
-        const filtrosSelecionados = localStorage.getItem('produtos_filtro');
-        const filtrosReais: string[] = filtrosSelecionados ? JSON.parse(filtrosSelecionados) : [];
+        const carregar = async () => {
+            const filtrosSelecionados = localStorage.getItem('produtos_filtro');
+            const filtrosReais: string[] = filtrosSelecionados ? JSON.parse(filtrosSelecionados) : [];
 
-        if (filtrosReais.length === 0) {
-        const res = await filtroSupabase([]);
-        setItens(res);
-        return;
-        }
+            if (filtrosReais.length === 0) {
+                const res = await filtroSupabase([]);
+                setItens(res);
+                const newCores = cores.map((cor) => {
+                    const quant = res.filter((f) => f.cor === cor.nome);
 
-        const { selecionados, precoMin, precoMax } = separarFiltros(filtrosReais);
+                    return {
+                        ...cor,
+                        quant: quant.length
+                    };
+                });
 
-        const filtrosEscolhidos = obterFiltros({ selecionados, precoMin, precoMax });
+                const newTamanho = tamanho.map((tamanho) => {
+                    const quant = res.filter((f) => f.tamanho === tamanho.nome);
 
-        const produtos = await filtroSupabase(filtrosEscolhidos);
-        setItens(produtos);
-    };
+                    return {
+                        ...tamanho,
+                        quant: quant.length
+                    };
+                });
 
-    carregar();
+                setTamanho(newTamanho);
+                setCores(newCores);
+                return;
+            }
+
+            const { selecionados, precoMin, precoMax } = separarFiltros(filtrosReais);
+            console.log('selecionados', selecionados);
+
+            const filtrosEscolhidos = obterFiltros({ selecionados, precoMin, precoMax });
+            console.log('filtrosEscolhidos', filtrosEscolhidos);
+
+            const produtos = await filtroSupabase(filtrosEscolhidos);
+            setItens(produtos);
+
+            const newCores = cores.map((cor) => {
+                const quant = produtos.filter((f) => f.cor === cor.nome);
+
+                return {
+                    ...cor,
+                    quant: quant.length
+                };
+            });
+
+            const newTamanho = tamanho.map((tamanho) => {
+                const quant = produtos.filter((f) => f.tamanho === tamanho.nome);
+
+                return {
+                    ...tamanho,
+                    quant: quant.length
+                };
+            });
+
+            setTamanho(newTamanho);
+            setCores(newCores);
+        };
+
+        carregar();
     }, []);
 
-    const itensCarrinhoBase: ItensCarrinho[] = [ 
-        {
-            id: '1',
-            nome: "Vestido curto rosa",
-            imagem: "https://images.unsplash.com/photo-1542295669297-4d352b042bca?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 119.90,
-            precoAtual: 110.00,
-            quantidade: 1,
-            cor: 'Rosa',
-            tamanho: 'M'
-        },
-        {
-            id: '2',
-            nome: "Blusa feminina branca",
-            imagem: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 79.90,
-            precoAtual: 69.90,
-            quantidade: 1,
-            cor: 'Branco',
-            tamanho: 'P'
-        },
-        {
-            id: '3',
-            nome: "Calça jeans skinny",
-            imagem: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 149.90,
-            precoAtual: 129.90,
-            quantidade: 1,
-            cor: 'Azul',
-            tamanho: 'G'
-        },
-        {
-            id: '4',
-            nome: "Jaqueta jeans azul",
-            imagem: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 199.90,
-            precoAtual: 179.90,
-            quantidade: 1,
-            cor: 'Azul',
-            tamanho: 'GG'
-        },
-        {
-            id: '5',
-            nome: "Saia midi floral",
-            imagem: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 99.90,
-            precoAtual: 89.90,
-            quantidade: 1,
-            cor: 'Melancia',
-            tamanho: 'M'
-        },
-        {
-            id: '6',
-            nome: "Bolsa feminina preta",
-            imagem: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 159.90,
-            precoAtual: 139.90,
-            quantidade: 1,
-            cor: 'Preto',
-            tamanho: 'MM'
-        },
-        {
-            id: '7',
-            nome: "Camisa social azul",
-            imagem: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=687&auto=format&fit=crop",
-            precoOriginal: 129.90,
-            precoAtual: 109.90,
-            quantidade: 1,
-            cor: 'Vinho',
-            tamanho: 'XL'
+    const itensOrdenados = useMemo(() => {
+        switch (ordem) {
+            case 'menor_preco':
+                return [...itens].sort((a, b) => a.precoAtual - b.precoAtual);
+            case 'maior_preco':
+                return [...itens].sort((a, b) => b.precoAtual - a.precoAtual);
+            default:
+                return itens;
         }
-    ];
+    }, [ordem, itens]);
 
+    
     return (
-        <CardProduto itens={itensCarrinhoBase}/>
-    )
+        <CardProduto itens={itensOrdenados}/>
+    );
 }

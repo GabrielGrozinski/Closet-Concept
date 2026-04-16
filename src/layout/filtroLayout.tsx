@@ -14,7 +14,7 @@ export function FiltrosTopico() {
     const location = useLocation();
     const navigate = useNavigate();
     const pathName = location.pathname.replace('/', '').trim();
-    const {mostrarFiltroModal} = contextFavoritos();
+    const {mostrarFiltroModal, cores, tamanho} = contextFavoritos();
     const [filtroProdutos, setFiltroProdutos] = useState<string[]>(() => {
         const filtroEscolhido = localStorage.getItem(`${pathName}_filtro`);
         return filtroEscolhido ? JSON.parse(filtroEscolhido) : [''];
@@ -39,12 +39,12 @@ export function FiltrosTopico() {
         } else if (filtroPreco.startsWith('Até R$')) {
             return 0;
         } else if (filtroPreco.includes(' a R$')) {
-            const minMax = filtroPreco
+            const min = filtroPreco
+            .split(" a ")[0]
             .replace("R$", "")
-            .split(" a ")
-            .map((v) => v.trim());
+            .trim();
 
-            return Number(minMax[0]);
+            return Number(min);
         } else {
             return 0;
         }
@@ -67,12 +67,12 @@ export function FiltrosTopico() {
         } else if (filtroPreco.startsWith('Até R$')) {
             return Number(filtroPreco.replace('Até R$', '').trim());
         } else if (filtroPreco.includes(' a R$')) {
-            const minMax = filtroPreco
+            const max = filtroPreco
+            .split(" a ")[1]
             .replace("R$", "")
-            .split(" a ")
-            .map((v) => v.trim());
+            .trim();
 
-            return Number(minMax[1]);
+            return Number(max);
         } else {
             return 0;
         }
@@ -107,86 +107,6 @@ export function FiltrosTopico() {
         { 
             nome: "Sapatos", 
             navigate: "/sobre",
-        },
-    ];
-
-    const cores = [
-        {
-            nome: 'Preto',
-            quant: 120,
-            cor: '#000000'
-        },
-        {
-            nome: 'Verde',
-            quant: 85,
-            cor: '#008000'
-        },
-        {
-            nome: 'Vermelho',
-            quant: 64,
-            cor: '#FF0000'
-        },
-        {
-            nome: 'Azul',
-            quant: 97,
-            cor: '#0000FF'
-        },
-        {
-            nome: 'Branco',
-            quant: 150,
-            cor: '#FFFFFF'
-        },
-        {
-            nome: 'Melancia',
-            quant: 42,
-            cor: '#FC6C85'
-        },
-        {
-            nome: 'Roxo',
-            quant: 58,
-            cor: '#800080'
-        },
-        {
-            nome: 'Dourado',
-            quant: 33,
-            cor: '#FFD700'
-        },
-        {
-            nome: 'Rosa',
-            quant: 76,
-            cor: '#FFC0CB'
-        },
-        {
-            nome: 'Vinho',
-            quant: 29,
-            cor: '#722F37'
-        },
-    ];
-
-    const tamanho = [
-        {
-            nome: 'XL',
-            quant: 120,
-        },
-        {
-            nome: 'M',
-            quant: 85,
-        },
-        {
-            nome: 'G',
-            quant: 64,
-        },
-        {
-            nome: 'GG',
-            quant: 97,
-        },
-        {
-            nome: 'MM',
-            quant: 150,
-        },
-        {
-            nome: 'P',
-            quant: 42,
         },
     ];
 
@@ -259,7 +179,7 @@ export function FiltrosTopico() {
 
                         {((maisCor && index === cores.length - 1) || (!maisCor && index === 3)) &&
                             <button onClick={() => setMaisCor(!maisCor)} className="uppercase rounded-full p-1 px-3 border border-zinc-800/70 text=zinc-800/90 text-[11px] font-medium tracking-[1px] font-[Poppins] mt-3 cursor-pointer">
-                                {cores ? 'ver menos' : 'ver mais'}
+                                {maisCor ? 'ver menos' : 'ver mais'}
                             </button>
                         }
                     </div>
@@ -295,7 +215,7 @@ export function FiltrosTopico() {
 
                         {((maisTamanho && index === tamanho.length - 1) || (!maisTamanho && index === 3)) &&
                             <button onClick={() => setMaisTamanho(!maisTamanho)} className="uppercase rounded-full p-1 px-3 border border-zinc-800/70 text=zinc-800/90 text-[11px] font-medium tracking-[1px] font-[Poppins] mt-3 cursor-pointer">
-                                {tamanho ? 'ver menos' : 'ver mais'}
+                                {maisTamanho ? 'ver menos' : 'ver mais'}
                             </button>
                         }
                     </div>

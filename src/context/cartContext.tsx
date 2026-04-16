@@ -1,19 +1,21 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 
-type ItensCarrinho = {
+type ItensCarrinhoBase = {
     id: string;
     nome: string;
     imagem: string;
     precoOriginal: number;
     precoAtual: number;
+    tamanho: string;
+    cor: string;
     quantidade: number;
 }
 
 interface CartType {
-    adicionarItemCarrinho: (v: ItensCarrinho) => void;
+    adicionarItemCarrinho: (v: ItensCarrinhoBase) => void;
     removerItem: (v: string) => void;
-    carrinho: ItensCarrinho[] | null;
-    setCarrinho: (v: ItensCarrinho[] | null) => void;
+    carrinho: ItensCarrinhoBase[] | null;
+    setCarrinho: (v: ItensCarrinhoBase[] | null) => void;
     carrinhoQuantidade: number;
     setCarrinhoQuantidade: (v: number) => void;
 }
@@ -25,7 +27,7 @@ interface Props {
 export const cart_context = createContext<CartType>({} as CartType);
 
 export default function CartContext({children}: Props) {
-    const [carrinho, setCarrinho] = useState<ItensCarrinho[] | null>(() => {
+    const [carrinho, setCarrinho] = useState<ItensCarrinhoBase[] | null>(() => {
         try {
             const data = localStorage.getItem('carrinho');
             return data ? JSON.parse(data) : null;
@@ -43,10 +45,10 @@ export default function CartContext({children}: Props) {
         }
     });
 
-    function adicionarItemCarrinho(item: ItensCarrinho) {
+    function adicionarItemCarrinho(item: ItensCarrinhoBase) {
         const produtosAtuais = localStorage.getItem('carrinho');
 
-        let produtos: ItensCarrinho[] = produtosAtuais 
+        let produtos: ItensCarrinhoBase[] = produtosAtuais 
             ? JSON.parse(produtosAtuais) 
             : [];
 

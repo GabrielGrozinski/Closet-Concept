@@ -23,9 +23,8 @@ imagem?: string;
 };
 
 export default function PaginaPadrao({children}: Props) {
-    const {mostrarFiltroModal, mostrarSearch} = contextFavoritos();
+    const {mostrarFiltroModal, mostrarSearch, mostrarLogin, setMostrarLogin} = contextFavoritos();
     const [topicoAtual, setTopicoAtual] = useState<Topico | null>(null);
-    const [mostrarLogin, setMostrarLogin] = useState(false);
     const [mostrarCarrinho, setMostrarCarrinho] = useState(false);
     const [largura, setLargura] = useState(window.innerWidth);
     const root = window.document.documentElement;
@@ -56,11 +55,11 @@ export default function PaginaPadrao({children}: Props) {
 
             <FiltroModal/>
 
-            <MenuAberto setMostrarLogin={setMostrarLogin}/>
+            <MenuAberto/>
 
             {mostrarLogin &&
                 <>
-                <Login setMostrarLogin={setMostrarLogin}/>
+                <Login/>
                 <div onClick={() => setMostrarLogin(false)} className="inset-0 backdrop-blur-[1px] bg-black/50 fixed z-1002"/>
                 </>
             }
@@ -71,7 +70,7 @@ export default function PaginaPadrao({children}: Props) {
 
             <CarrinhoDeCompras mostrarCarrinho={mostrarCarrinho} setMostrarCarrinho={setMostrarCarrinho}/>
 
-            <HeaderFixo topicoAtual={topicoAtual} setTopicoAtual={setTopicoAtual} mostrarCarrinho={mostrarCarrinho} setMostrarCarrinho={setMostrarCarrinho} setMostrarLogin={setMostrarLogin}/>
+            <HeaderFixo topicoAtual={topicoAtual} setTopicoAtual={setTopicoAtual} mostrarCarrinho={mostrarCarrinho} setMostrarCarrinho={setMostrarCarrinho} />
 
             {children}
 

@@ -114,7 +114,6 @@ interface Props {
     setTopicoAtual: (v: Topico | null) => void;
     mostrarCarrinho: boolean;
     setMostrarCarrinho: (v: boolean) => void;
-    setMostrarLogin: (v: boolean) => void;
 }
 
 type produtoExtra = {subtitulo: string, linkSubtitulo: string;}
@@ -126,10 +125,10 @@ imagem?: string;
 };
 
 
-export default function HeaderFixo({topicoAtual, setTopicoAtual, setMostrarCarrinho, setMostrarLogin}: Props) {
+export default function HeaderFixo({topicoAtual, setTopicoAtual, setMostrarCarrinho}: Props) {
     const {carrinhoQuantidade} = contextCart();
     const {user} = contextAuth();
-    const {setMenuAberto, menuAberto, mostrarSearch, setMostrarSearch, search, setSearch} = contextFavoritos();
+    const {setMenuAberto, menuAberto, mostrarSearch, setMostrarSearch, search, setSearch, setMostrarLogin} = contextFavoritos();
     const navigate = useNavigate();
     
     const [cliqueForaSearch, setCliqueForaSearch] = useState(false);

@@ -4,15 +4,12 @@ import "../styles/login.css";
 import { contextAuth } from "../context/authContext";
 import { ClipLoader } from "react-spinners";
 import Cadastro from "../components/cadastro";
+import { contextFavoritos } from "../context/favoritesContext";
 
 
-interface Props {
-    setMostrarLogin: (v: boolean) => void;
-}
-
-
-export default function Login({setMostrarLogin}: Props) {
+export default function Login() {
     const {fazerLogin} = contextAuth();
+    const {setMostrarLogin} = contextFavoritos();
     const [loading, setLoading] = useState(false);
     const [campoEmail, setCampoEmail] = useState<"sem-clicar" | "clicando" | "ja-clicou">("sem-clicar");
     const [campoSenha, setCampoSenha] = useState<"sem-clicar" | "clicando" | "ja-clicou">("sem-clicar");

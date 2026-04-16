@@ -77,19 +77,22 @@ export function separarFiltros(filtros: string[]) {
     } else if (precoEscolhido.startsWith('Até R$')) {
         precoMax = Number(precoEscolhido.replace('Até R$', '').trim());
     } else if (precoEscolhido.includes(' a R$')) {
-        const minMax = precoEscolhido
-        .replace("R$", "")
-        .split(" a ")
-        .map((v) => v.trim());
+        const min = precoEscolhido
+        .split(" a ")[0]
+        .replace("R$", "");
 
-        precoMin = Number(minMax[0]);
-        precoMax = Number(minMax[1]);
+        const max = precoEscolhido
+        .split(" a ")[1]
+        .replace("R$", "");
+
+        precoMin = Number(min);
+        precoMax = Number(max);
     }
 
     return {selecionados, precoMin, precoMax};
 }
 
-type ItensCarrinhoBase = {
+type ItensBase = {
     id: string;
     nome: string;
     imagem: string;
@@ -99,7 +102,7 @@ type ItensCarrinhoBase = {
     cor: string;
 }
 
-export async function filtroSupabase(filtros: Filtro[], tipo?: string): Promise<ItensCarrinhoBase[]> {
+export async function filtroSupabase(filtros: Filtro[], tipo?: string): Promise<ItensBase[]> {
     let query = supabase.from('produtos').select('*');
 
     filtros.forEach((filtro) => {
@@ -113,11 +116,11 @@ export async function filtroSupabase(filtros: Filtro[], tipo?: string): Promise<
 
         if (filtro.tipo === 'preco') {
             if (filtro.min !== undefined) {
-                query = query.gte('preco', filtro.min);
+                query = query.gte('precoAtual', filtro.min);
             }
 
             if (filtro.max !== undefined) {
-                query = query.lte('preco', filtro.max);
+                query = query.lte('precoAtual', filtro.max);
             }
         }
 
@@ -134,6 +137,7 @@ export async function filtroSupabase(filtros: Filtro[], tipo?: string): Promise<
         return [];
     }
 
-    return data;
-}
+    const lista: ItensBase[] = data;
 
+    return lista;
+}

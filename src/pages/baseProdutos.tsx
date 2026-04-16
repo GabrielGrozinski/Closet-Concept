@@ -16,11 +16,14 @@ export default function MainProdutos({children}: Props) {
     const pathName = useMemo(() => {
         return location.pathname.replace('/', '');
     }, [location]);
+
     const filtroRef = useRef<HTMLDivElement | null>(null);
     const {setMostrarFiltro} = contextFavoritos();
+
     const localEscolhido = useMemo(() => {
         return localStorage.getItem(`${pathName}_filtros`);
     }, [pathName]); 
+    
     const [filtros, setFiltros] = useState<string[] | null>(() => localEscolhido ? JSON.parse(localEscolhido) : null);
 
     useEffect(() => {
@@ -46,7 +49,7 @@ export default function MainProdutos({children}: Props) {
 
 
     return (
-        <main className="lg:grid lg:grid-cols-[20%_1fr] lg:gap-6 lg:grid-rows-[auto_1fr] lg:px-[5%] lg:pl-[1%] lg:pb-16">
+        <main className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-6 lg:grid-rows-[auto_1fr] lg:px-[5%] lg:pl-[1%] lg:pb-16">
 
             <span className="flex mt-6 gap-1 lg:items-center lg:justify-between lg:col-span-full lg:row-1 lg:px-10 ml-4">
                 <span className="flex lg:flex-row flex-col items-center min-w-full lg:min-w-0">

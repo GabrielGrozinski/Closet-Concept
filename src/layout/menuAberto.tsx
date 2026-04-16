@@ -14,14 +14,10 @@ imagem?: string;
 };
 
 
-interface Props {
-    setMostrarLogin: (v: boolean) => void;
-}
-
-export default function MenuAberto({setMostrarLogin}: Props) {
+export default function MenuAberto() {
     const navigate = useNavigate();
     const {user} = contextAuth();
-    const {menuAberto, setMenuAberto} = contextFavoritos();
+    const {menuAberto, setMenuAberto, setMostrarLogin} = contextFavoritos();
     
     const topicos: Topico[] = [
     { nome: "Todos os Produtos", navigate: "/produtos" },
