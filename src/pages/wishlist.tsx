@@ -15,19 +15,14 @@ type ItensBase = {
 }
 
 export default function Wishlist() {
-    const {user, session} = contextAuth();
+    const {user} = contextAuth();
     const {buscarFavoritos, setMostrarLogin} = contextFavoritos();
     const [itens, setItens] = useState<ItensBase[]>([]);
     const [hasFavoritos, setHasFavoritos] = useState(false);
 
     useEffect(() => {
-        if (!session) {
-            setMostrarLogin(true);
-        }
-    }, [session]);
-
-    useEffect(() => {
-        if (!user) return;
+        if (!user) return setMostrarLogin(true);
+        setMostrarLogin(false);
         const handleFavoritos = async () => {
             const favoritos = await buscarFavoritos(user);
             if (!favoritos || favoritos.length === 0) return setHasFavoritos(false);
@@ -49,8 +44,9 @@ export default function Wishlist() {
         };
 
         handleFavoritos();
-    }, []);
+    }, [user]);
 
+    
     return (
         <div className="min-h-screen bg-[rgba(250,249,247)] pt-4">
             <h1 className="font-[Poppins] font-medium sm:text-2xl text-xl sm:ml-34 text-center sm:text-left mb-4">Lista de Desejos</h1>

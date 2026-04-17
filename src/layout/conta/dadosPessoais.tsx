@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../auth/supabase-client";
 import { contextAuth } from "../../context/authContext";
-
+import { ClipLoader } from "react-spinners";
 
 
 export default function DadosPessoais() {
     const {user} = contextAuth();
-    const [requisitoCadastro, setRequisitoCadastro] = useState(false);
     const [form, setForm] = useState({
         nome: "",
         sobrenome: "",
@@ -15,6 +14,50 @@ export default function DadosPessoais() {
         data: ""
     });
     const [formOriginal, setFormOriginal] = useState(form);
+    const [loading, setLoading] = useState(false);
+
+    async function buscaInputs() {
+        if (!user) return;
+        const {data, error} = await supabase
+            .from('usuarios')
+            .select('*')
+            .eq('id', user.id);
+
+        if (error) {
+            console.error('Houve um erro', error);
+            return;
+        }
+
+        console.log('data', data);
+
+        if (!data || data.length === 0) return;
+
+        const {nome, sobrenome, cpf, telefone, data_nascimento} = data[0];
+
+        setForm({
+            nome: nome ?? "",
+            cpf: cpf ?? "",
+            sobrenome: sobrenome ?? "",
+            telefone: telefone ?? "",
+            data: data_nascimento ?? ""
+        });
+
+        setFormOriginal({
+            nome: nome ?? "",
+            cpf: cpf ?? "",
+            sobrenome: sobrenome ?? "",
+            telefone: telefone ?? "",
+            data: data_nascimento ?? ""
+        });
+    }
+
+    useEffect(() => {
+        if (user) {
+            buscaInputs();
+        }
+    }, [user]);
+    
+    const [requisitoCadastro, setRequisitoCadastro] = useState(false);
 
     type CampoStatus = "sem-clicar" | "clicando" | "ja-clicou";
     type inputType = {
@@ -121,7 +164,8 @@ export default function DadosPessoais() {
 
     async function atualizarDados() {
         if (!user) return;
-        const {data, error} = await supabase
+        setLoading(true);
+        const {error} = await supabase
             .from('usuarios')
             .update({
                 cpf: form.cpf,
@@ -134,12 +178,13 @@ export default function DadosPessoais() {
         
         if (error) {
             console.error('Houve um erro', error);
-            return;
+            return setLoading(false);
         }
 
-        if (data) {
-            setFormOriginal(form);
-        }
+        setFormOriginal(form);
+        setLoading(false)
+        window.location.reload();
+
     }
 
 
@@ -232,9 +277,13 @@ export default function DadosPessoais() {
                 })}
 
                 <div className="flex min-w-4/5 max-w-4/5 items-center justify-center mt-12">
-                    <button disabled={!requisitoCadastro} onClick={() => atualizarDados()} className={`p-2 min-w-1/2 max-w-1/2 min-h-10 font-medium text-white text-sm rounded-md transition-all duration-200 ${requisitoCadastro ? 'bg-[#222222] cursor-pointer' : 'cursor-not-allowed opacity-70 bg-[#2222229a]'}`}>
-                        Salvar Alterações
-                    </button>
+                    {loading ?
+                        <ClipLoader size={24} color="#000" className="self-center" />    
+                    :
+                        <button disabled={!requisitoCadastro || loading} onClick={() => atualizarDados()} className={`p-2 min-w-1/2 max-w-1/2 min-h-10 font-medium text-white text-sm rounded-md transition-all duration-200 ${requisitoCadastro ? 'bg-[#222222] cursor-pointer' : 'cursor-not-allowed opacity-70 bg-[#2222229a]'}`}>
+                            Salvar Alterações
+                        </button>
+                    }
                 </div>
             </section>
         </div>

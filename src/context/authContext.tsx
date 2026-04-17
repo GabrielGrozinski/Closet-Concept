@@ -13,9 +13,9 @@ type PromiseReturn = {
 }
 
 interface authType {
-    user: User | null;
+    user: User | null | undefined;
     setUser: (v: User | null) => void;
-    session: Session | null;
+    session: Session | null | undefined;
     setSession: (v: Session | null) => void;
     fazerCadastroDatabase: (email: string, cpf: string, telefone: string, nome: string, sobrenome: string, data_nascimento: string) => Promise<PromiseReturn>;
     fazerCadastro: (email: string, cpf: string, telefone: string, nome: string, sobrenome: string, data_nascimento: string, password: string) => Promise<PromiseReturn>;
@@ -25,17 +25,17 @@ interface authType {
 export const auth_context = createContext<authType>({} as authType);
 
 export default function AuthContext({children}: Props) {
-    const [user, setUser] = useState<User | null>(null);
-    const [session, setSession] = useState<Session | null>(null);
+    const [user, setUser] = useState<User | null | undefined>(undefined);
+    const [session, setSession] = useState<Session | null | undefined>(undefined);
 
     useEffect(() => {
         supabase.auth.getSession()
         .then(( {data: { session } }) => setSession(session ?? null))
-        .catch(( {error} ) => console.error("Houve um erro ao buscar a sessão", error))
+        .catch(( {error} ) => console.error("Houve um erro ao buscar a sessão", error));
 
         supabase.auth.getUser()
         .then(( {data: { user } }) => setUser(user ?? null))
-        .catch(( { error } ) => console.error("Houve um erro ao buscar o usuário", error))
+        .catch(( { error } ) => console.error("Houve um erro ao buscar o usuário", error));
 
         const {data: {subscription}} = 
             supabase.auth.onAuthStateChange((_event, session) => {

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../auth/supabase-client";
 import { contextAuth } from "../../context/authContext";
-
+import { ClipLoader } from "react-spinners";
 
 
 export default function Endereco() {
     const {user} = contextAuth();
+    const [loading, setLoading] = useState(false);
     type FormState = {
         cep: string;
         endereco: string;
@@ -121,28 +122,32 @@ export default function Endereco() {
 
     async function atualizarDados() {
         if (!user) return;
-        const {data, error} = await supabase
+        setLoading(true);
+        const enderecos = {
+            cep: form.cep,
+            endereco: form.endereco,
+            bairro: form.bairro,
+            numero: form.numero,
+            complemento: form.complemento,
+            cidade: form.cidade,
+            estado: form.estado,
+            destinatario: form.destinatario,
+        }
+        const {error} = await supabase
             .from('usuarios')
             .update({
-                cep: form.cep,
-                endereco: form.endereco,
-                bairro: form.bairro,
-                numero: form.numero,
-                complemento: form.complemento,
-                cidade: form.cidade,
-                estado: form.estado,
-                destinatario: form.destinatario,
+                enderecos
             })
             .eq('id', user.id);
         
         if (error) {
             console.error('Houve um erro', error);
-            return;
+            return setLoading(false);
         }
 
-        if (data) {
-            setFormOriginal(form);
-        }
+        setFormOriginal(form);
+        setLoading(false)
+        window.location.reload();
     }
 
 
@@ -152,76 +157,89 @@ export default function Endereco() {
             <h1 className="text-xl font-bold">Endereços</h1>
 
             <section onClick={() => atualizarDados} className="p-2 max-w-4/5 flex flex-col">
-
+                {!adicionarEndereco &&
                 <div className="flex min-w-full items-start justify-end mb-12 -mt-2">
                     <button onClick={() => setAdicionarEndereco(true)} className="p-2 min-w-1/2 max-w-1/2 min-h-10 font-medium text-white text-sm rounded-md transition-all duration-200 bg-[#222222] cursor-pointer">
                         Adicionar endereço
                     </button>
                 </div>
+                }
 
                 {adicionarEndereco &&
-                inputs.map((input) => {
-                    const status = campoStatus[input.name];
-                    const value = form[input.name];
+                <>
+                    {inputs.map((input) => {
+                        const status = campoStatus[input.name];
+                        const value = form[input.name];
 
-                    return (
-                    <div key={input.name} className="mt-10">
-                        <div className="relative">
-                        <input
-                            autoComplete="off"
-                            type={input.type}
-                            value={value}
-                            onFocus={() => {
-                            setCampoStatus((prev) => ({
-                                ...prev,
-                                [input.name]: "clicando",
-                            }));
-                            }}
-                            onBlur={() => {
-                            setCampoStatus((prev) => ({
-                                ...prev,
-                                [input.name]:
-                                value.length > 0 ? "clicando" : "ja-clicou",
-                            }));
-                            }}
-                            inputMode='text'
-                            onChange={(e) => {
-                                const val = e.currentTarget.value.trim();
-
-                                setForm((prev) => ({
+                        return (
+                        <div key={input.name} className="mt-10">
+                            <div className="relative">
+                            <input
+                                autoComplete="off"
+                                type={input.type}
+                                value={value}
+                                onFocus={() => {
+                                setCampoStatus((prev) => ({
                                     ...prev,
-                                    [input.name]: val,
+                                    [input.name]: "clicando",
                                 }));
-                            }}
-                            className={`border-0 border-b-2 min-w-full pb-0.5 outline-0 
-                                ${
-                                status === "ja-clicou"
-                                    ? "border-b-red-600"
-                                    : "border-b-zinc-800/20"
-                                }
-                            `}
-                        />
+                                }}
+                                onBlur={() => {
+                                setCampoStatus((prev) => ({
+                                    ...prev,
+                                    [input.name]:
+                                    value.length > 0 ? "clicando" : "ja-clicou",
+                                }));
+                                }}
+                                inputMode='text'
+                                onChange={(e) => {
+                                    const val = e.currentTarget.value.trim();
 
-                        <label
-                            className={`absolute left-0 translate-x-0 text-gray-800/75 top-1/2 transition-all duration-200 ${
-                            (status === "clicando" || input.value !== "")
-                                ? "-translate-[200%] text-xs font-bold"
-                                : "-translate-full text-sm font-medium"
-                            }`}
-                        >
-                            {input.label}
-                        </label>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        [input.name]: val,
+                                    }));
+                                }}
+                                className={`border-0 border-b-2 min-w-full pb-0.5 outline-0 
+                                    ${
+                                    status === "ja-clicou"
+                                        ? "border-b-red-600"
+                                        : "border-b-zinc-800/20"
+                                    }
+                                `}
+                            />
+
+                            <label
+                                className={`absolute left-0 translate-x-0 text-gray-800/75 top-1/2 transition-all duration-200 ${
+                                (status === "clicando" || input.value !== "")
+                                    ? "-translate-[200%] text-xs font-bold"
+                                    : "-translate-full text-sm font-medium"
+                                }`}
+                            >
+                                {input.label}
+                            </label>
+                            </div>
+
+                            {status === "ja-clicou" && (
+                            <p className="font-medium text-red-500">
+                                este campo é obrigatório
+                            </p>
+                            )}
+
                         </div>
+                        );
+                    })}
 
-                        {status === "ja-clicou" && (
-                        <p className="font-medium text-red-500">
-                            este campo é obrigatório
-                        </p>
-                        )}
-
+                    <div className="flex min-w-full items-center justify-center mt-12">
+                        {loading ?
+                            <ClipLoader size={24} color="#000" className="self-center" />    
+                        :
+                            <button disabled={!requisitoCadastro || loading} onClick={() => atualizarDados()} className={`p-2 min-w-1/2 max-w-1/2 min-h-10 font-medium text-white text-sm rounded-md transition-all duration-200 ${requisitoCadastro ? 'bg-[#222222] cursor-pointer' : 'cursor-not-allowed opacity-70 bg-[#2222229a]'}`}>
+                                Salvar Alterações
+                            </button>
+                        }
                     </div>
-                    );
-                })
+                </>
                 }
 
             </section>
