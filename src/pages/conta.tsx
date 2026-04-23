@@ -60,7 +60,7 @@ export default function Conta({children}: Props) {
 
 
     return (
-        <div className="grid grid-cols-[35%_50%_1fr] bg-[rgba(250,249,247)] min-h-screen p-4">
+        <div className="grid grid-cols-[35%_50%_1fr] bg-[rgba(250,249,247)] min-h-screen p-4 pb-0">
             <section className="col-1 fixed top-36 left-[10%] right-[65%] flex flex-col gap-4">
                 {topicos.map((topico) => 
                     <article 

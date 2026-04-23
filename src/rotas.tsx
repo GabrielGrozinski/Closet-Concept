@@ -8,6 +8,7 @@ import DadosPessoais from "./layout/conta/dadosPessoais";
 import Endereco from "./layout/conta/endereco";
 import MainProdutos from "./pages/baseProdutos";
 import TodosProdutos from "./layout/todosProdutos";
+import Pagamento from "./layout/conta/pagamentos";
 
 
 export function ScrollTop() {
@@ -32,6 +33,7 @@ export default function Rotas() {
                     <Route path="/conta" element={<Conta><Outlet/></Conta>}>
                         <Route index element={<DadosPessoais/>}/>
                         <Route path="endereco" element={<Endereco/>}/>
+                        <Route path="pagamentos" element={<Pagamento/>}/>
                     </Route>
 
                     <Route path="/produtos" element={<MainProdutos><Outlet/></MainProdutos>}>

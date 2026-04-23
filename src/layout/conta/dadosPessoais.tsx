@@ -191,9 +191,9 @@ export default function DadosPessoais() {
 
     return (
         <div>
-            <h1 className="text-xl font-bold">Dados Pessoais</h1>
-
+        
             <section className="p-2 max-w-4/5 flex flex-col">
+            <h1 className="text-xl font-bold">Dados Pessoais</h1>
                 {inputs.map((input) => {
                     const status = campoStatus[input.name];
                     const value = form[input.name];

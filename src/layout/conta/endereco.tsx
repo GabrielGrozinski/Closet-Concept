@@ -2,24 +2,26 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../auth/supabase-client";
 import { contextAuth } from "../../context/authContext";
 import { ClipLoader } from "react-spinners";
+import { X } from "lucide-react";
+
+type FormState = {
+    cep: string;
+    endereco: string;
+    bairro: string;
+    numero: string;
+    complemento: string;
+    cidade: string;
+    estado: string;
+    destinatario: string;
+};
 
 
 export default function Endereco() {
     const {user} = contextAuth();
+    const [enderecosSalvos, setEnderecosSalvos] = useState<FormState[] | undefined>(undefined);
     const [loading, setLoading] = useState(false);
-    type FormState = {
-        cep: string;
-        endereco: string;
-        bairro: string;
-        numero: string;
-        complemento: string;
-        cidade: string;
-        estado: string;
-        destinatario: string;
-    };
 
     const [requisitoCadastro, setRequisitoCadastro] = useState(false);
-    console.log(requisitoCadastro)
     const [adicionarEndereco, setAdicionarEndereco] = useState(false);
     const [form, setForm] = useState<FormState>({
         cep: "",
@@ -120,19 +122,59 @@ export default function Endereco() {
         }
     }, [form, formOriginal]);
 
+    useEffect(() => {
+        if (!user) return;
+
+        async function buscaEnderecos() {
+            const {data, error} = await supabase
+                .from('usuarios')
+                .select('enderecos')
+                .eq('id', user?.id);
+            
+            if (error) {
+                console.error('Houve um erro', error);
+                return;
+            }
+
+            if (data) {
+                console.log('data', data);
+                setEnderecosSalvos(data[0].enderecos);
+            }
+
+            return;
+        }
+
+        buscaEnderecos();
+    }, [user]);
+
     async function atualizarDados() {
         if (!user) return;
         setLoading(true);
-        const enderecos = {
-            cep: form.cep,
-            endereco: form.endereco,
-            bairro: form.bairro,
-            numero: form.numero,
-            complemento: form.complemento,
-            cidade: form.cidade,
-            estado: form.estado,
-            destinatario: form.destinatario,
-        }
+        const enderecos = enderecosSalvos ?
+            [
+                ...enderecosSalvos,
+                {
+                    cep: form.cep,
+                    endereco: form.endereco,
+                    bairro: form.bairro,
+                    numero: form.numero,
+                    complemento: form.complemento,
+                    cidade: form.cidade,
+                    estado: form.estado,
+                    destinatario: form.destinatario,
+                }
+            ] 
+        :
+            {
+                cep: form.cep,
+                endereco: form.endereco,
+                bairro: form.bairro,
+                numero: form.numero,
+                complemento: form.complemento,
+                cidade: form.cidade,
+                estado: form.estado,
+                destinatario: form.destinatario,
+            }
         const {error} = await supabase
             .from('usuarios')
             .update({
@@ -146,26 +188,55 @@ export default function Endereco() {
         }
 
         setFormOriginal(form);
-        setLoading(false)
+        setLoading(false);
+        window.scrollTo({
+            top: 0
+        });
         window.location.reload();
     }
 
+    async function removerEndereco(index: number) {
+        if (!user) return;
+        setLoading(true);
+        
+        const copiaEnderecos = [...enderecosSalvos!];
+
+        const novosEnderecos = copiaEnderecos.filter((_, i) => i !== index);
+
+        const {error} = await supabase
+            .from('usuarios')
+            .update({
+                enderecos: novosEnderecos
+            })
+            .eq('id', user.id);
+
+        if (error) {
+            console.error('Houve um erro', error);
+        }
+        
+        setLoading(false);
+        window.scrollTo({
+            top: 0
+        });
+        window.location.reload();
+        
+    }
 
 
     return (
         <div>
-            <h1 className="text-xl font-bold">Endereços</h1>
 
             <section onClick={() => atualizarDados} className="p-2 max-w-4/5 flex flex-col">
+                <h1 className="text-xl font-bold">Endereços</h1>
                 {!adicionarEndereco &&
-                <div className="flex min-w-full items-start justify-end mb-12 -mt-2">
+                <div className="flex min-w-[50vw] max-w-[50vw] items-start justify-end mb-12 -mt-2">
                     <button onClick={() => setAdicionarEndereco(true)} className="p-2 min-w-1/2 max-w-1/2 min-h-10 font-medium text-white text-sm rounded-md transition-all duration-200 bg-[#222222] cursor-pointer">
                         Adicionar endereço
                     </button>
                 </div>
                 }
 
-                {adicionarEndereco &&
+                {adicionarEndereco ?
                 <>
                     {inputs.map((input) => {
                         const status = campoStatus[input.name];
@@ -240,6 +311,22 @@ export default function Endereco() {
                         }
                     </div>
                 </>
+                :
+                <main className="flex justify-between gap-4 flex-wrap min-w-[50vw] max-w-[50vw]">
+                    {enderecosSalvos &&
+                        enderecosSalvos.map((endereco, index) =>
+                            <article key={index} className="border border-zinc-400/20 flex flex-col pt-8 p-6 pb-12 font-[Poppins] font-extralight text-[12px] relative gap-2 min-w-[47.5%] max-w-[47.5%]">
+                                <X size={18} className="absolute top-0 right-0 translate-y-1/4 -translate-x-1/5 hover:text-red-500 transition-all duration-200 cursor-pointer" onClick={() => removerEndereco(index)} />
+                                <span>{endereco.endereco}, {endereco.numero}</span>
+                                <span>{endereco.bairro} - {endereco.estado}</span>
+                                <span>{endereco.cep}</span>
+                                <span className="font-medium">
+                                    {endereco.destinatario}
+                                </span>
+                            </article>
+                        )
+                    }
+                </main>
                 }
 
             </section>
