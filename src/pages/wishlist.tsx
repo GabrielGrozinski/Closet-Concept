@@ -12,6 +12,7 @@ type ItensBase = {
     precoAtual: number;
     tamanho: string;
     cor: string;
+    nomeId: string;
 }
 
 export default function Wishlist() {

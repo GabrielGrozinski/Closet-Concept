@@ -4,6 +4,7 @@ import { contextCart } from "../context/cartContext";
 import { contextAuth } from "../context/authContext";
 import { supabase } from "../auth/supabase-client";
 import { contextFavoritos } from "../context/favoritesContext";
+import { useNavigate } from "react-router-dom";
 
 
 type ItensBase = {
@@ -14,6 +15,7 @@ type ItensBase = {
     precoAtual: number;
     tamanho: string;
     cor: string;
+    nomeId: string;
 }
 
 interface Props {
@@ -22,10 +24,12 @@ interface Props {
 
 
 export default function CardProduto({itens}: Props) {
+    const navigate = useNavigate();
     const { session, user } = contextAuth();
-    const {adicionarItemCarrinho} = contextCart();
+    const {adicionarItemCarrinho, setMostrarCarrinho} = contextCart();
     const {buscarFavoritos} = contextFavoritos();
     const [favoritos, setFavoritos] = useState(['']);
+    const [itemCarrinho, setItemCarrinho] = useState<ItensBase | undefined>();
 
     useEffect(() => {
         if (!user) return;
@@ -73,6 +77,14 @@ export default function CardProduto({itens}: Props) {
         setFavoritos(newFavoritos);
     }
 
+    useEffect(() => {
+        if (itemCarrinho) {
+            setTimeout(() => {
+                setItemCarrinho(undefined);
+            }, 2000);
+        }
+    }, [itemCarrinho]);
+
 
     return (
         <div className="p-4">
@@ -81,7 +93,8 @@ export default function CardProduto({itens}: Props) {
             className="grid sm:px-4 sm:gap-10 justify-center sm:grid-cols-[repeat(auto-fit,minmax(222px,222px))] grid-cols-2 gap-2"
             >
             {itens.map((item) => 
-                <article 
+                <article
+                    onClick={() => navigate(`/${item.nomeId}`)}
                     key={item.id}
                     className="grid sm:grid-rows-[280px_auto] grid-rows-[180px_auto] sm:min-w-56 sm:max-w-56 min-w-full max-w-full overflow-hidden gap-3 shadow-lg border border-[#22222212] cursor-pointer transition-all duration-300 rounded-md relative sm:max-h-114 sm:min-h-114 min-h-92 max-h-96 hover:shadow-2xl hover:border-[#22222216]"
                 >
@@ -150,10 +163,20 @@ export default function CardProduto({itens}: Props) {
 
                         <div className="grid sm:grid-cols-2 grid-cols-[25%_1fr] mt-4 items-center justify-items-center gap-2">
                             <button 
-                                onClick={() => adicionarItemCarrinho({...item, quantidade: 1})} 
-                                className="min-w-full max-w-full bg-[#f8ebdc] border border-black/6 p-2 sm:rounded-xl rounded-full text-zinc-900 text-shadow-lg flex items-center justify-center transition-colors duration-200 hover:opacity-80 cursor-pointer sm:min-h-8 sm:max-h-8"
-                            > 
-                                <ShoppingCart className="sm:max-h-4.5 sm:max-w-4.5 max-w-4 max-h-4"/> 
+                                onClick={() => {
+                                    adicionarItemCarrinho({...item, quantidade: 1});
+                                    setMostrarCarrinho(true);
+                                    setItemCarrinho(item);
+                                }} 
+                                className="min-w-full max-w-full bg-[#f8ebdc] border border-black/6 p-2 sm:rounded-xl rounded-full text-zinc-900 flex items-center justify-center transition-colors duration-200 hover:opacity-80 cursor-pointer sm:min-h-8 sm:max-h-8"
+                            >
+                                {(itemCarrinho && itemCarrinho.id === item.id) ?
+                                    <span className="text-xs">
+                                        Adicionando...
+                                    </span>
+                                :
+                                    <ShoppingCart className="sm:max-h-4.5 sm:max-w-4.5 max-w-4 max-h-4"/>
+                                } 
                             </button> 
                             
                             <button className="sm:min-w-full sm:max-w-full min-w-[90%] max-w-[90%] bg-[#222222] sm:p-2 p-1 rounded-xl text-white font-[Poppins] font-bold text-shadow-lg transition-colors duration-200 hover:opacity-90 cursor-pointer min-h-8 max-h-8"> 

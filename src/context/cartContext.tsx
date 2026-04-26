@@ -18,6 +18,8 @@ interface CartType {
     setCarrinho: (v: ItensCarrinhoBase[] | null) => void;
     carrinhoQuantidade: number;
     setCarrinhoQuantidade: (v: number) => void;
+    mostrarCarrinho: boolean;
+    setMostrarCarrinho: (v: boolean) => void;
 }
 
 interface Props {
@@ -35,6 +37,8 @@ export default function CartContext({children}: Props) {
             return null;
         }
     });
+
+    const [mostrarCarrinho, setMostrarCarrinho] = useState(false);
 
     const [carrinhoQuantidade, setCarrinhoQuantidade] = useState<number>(() => {
         try {
@@ -95,7 +99,9 @@ export default function CartContext({children}: Props) {
                 carrinho,
                 setCarrinho,
                 carrinhoQuantidade,
-                setCarrinhoQuantidade
+                setCarrinhoQuantidade,
+                mostrarCarrinho,
+                setMostrarCarrinho
             }}
         >
             {children}

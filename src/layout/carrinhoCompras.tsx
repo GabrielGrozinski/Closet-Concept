@@ -3,14 +3,9 @@ import { useEffect, useState } from "react";
 import { contextCart } from "../context/cartContext";
 
 
-type Props = {
-    mostrarCarrinho: boolean;
-    setMostrarCarrinho: (v: boolean) => void;
-}
 
-
-export default function CarrinhoDeCompras({mostrarCarrinho, setMostrarCarrinho}: Props) {
-    const {carrinho, setCarrinho, removerItem, adicionarItemCarrinho, carrinhoQuantidade} = contextCart();
+export default function CarrinhoDeCompras() {
+    const {carrinho, setCarrinho, removerItem, adicionarItemCarrinho, carrinhoQuantidade, mostrarCarrinho, setMostrarCarrinho} = contextCart();
     const [valorFinal, setValorFinal] = useState('0,00');
     const [valorDesconto, setValorDesconto] = useState('0,00');
     const [valorParcelado, setValorParcelado] = useState('0,00');

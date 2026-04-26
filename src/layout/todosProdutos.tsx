@@ -22,6 +22,7 @@ type ItensBase = {
     precoAtual: number;
     tamanho: string;
     cor: string;
+    nomeId: string;
 }
 
 export const itensCarrinhoBase: ItensCarrinho[] = [ 
@@ -99,7 +100,6 @@ export const itensCarrinhoBase: ItensCarrinho[] = [
 
 export default function TodosProdutos() {
     const {cores, tamanho, setTamanho, setCores, ordem} = contextFavoritos();
-
     const [itens, setItens] = useState<ItensBase[]>([]);
 
     useEffect(() => {

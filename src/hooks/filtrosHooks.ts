@@ -100,6 +100,7 @@ type ItensBase = {
     precoAtual: number;
     tamanho: string;
     cor: string;
+    nomeId: string;
 }
 
 export async function filtroSupabase(filtros: Filtro[], tipo?: string): Promise<ItensBase[]> {

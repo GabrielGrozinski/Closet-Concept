@@ -10,6 +10,7 @@ import { contextFavoritos } from "../../context/favoritesContext";
 import { FiltroOrdemFixo } from "../../components/filtro-e-ordem";
 import { contextAuth } from "../../context/authContext";
 import TelaLoading from "../telaLoading";
+import { contextCart } from "../../context/cartContext";
 
 
 interface Props {
@@ -28,8 +29,8 @@ export default function PaginaPadrao({children}: Props) {
     const {mostrarFiltroModal, mostrarSearch, mostrarLogin, setMostrarLogin} = contextFavoritos();
     const [loading, setLoading] = useState(true);
     const {user, session} = contextAuth();
+    const {mostrarCarrinho, setMostrarCarrinho} = contextCart();
     const [topicoAtual, setTopicoAtual] = useState<Topico | null>(null);
-    const [mostrarCarrinho, setMostrarCarrinho] = useState(false);
     const [largura, setLargura] = useState(window.innerWidth);
     const root = window.document.documentElement;
     root.style.transition = 'all 0.3s';
@@ -85,9 +86,9 @@ export default function PaginaPadrao({children}: Props) {
                 <div onClick={() => setMostrarCarrinho(false)} className="inset-0 backdrop-blur-[1px] bg-black/36 fixed z-1002"/>
             }
 
-            <CarrinhoDeCompras mostrarCarrinho={mostrarCarrinho} setMostrarCarrinho={setMostrarCarrinho}/>
+            <CarrinhoDeCompras/>
 
-            <HeaderFixo topicoAtual={topicoAtual} setTopicoAtual={setTopicoAtual} mostrarCarrinho={mostrarCarrinho} setMostrarCarrinho={setMostrarCarrinho} />
+            <HeaderFixo topicoAtual={topicoAtual} setTopicoAtual={setTopicoAtual}/>
 
             {children}
 

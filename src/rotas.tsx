@@ -9,6 +9,7 @@ import Endereco from "./layout/conta/endereco";
 import MainProdutos from "./pages/baseProdutos";
 import TodosProdutos from "./layout/todosProdutos";
 import Pagamento from "./layout/conta/pagamentos";
+import ProdutoEscolhido from "./layout/produtoEscolhido";
 
 
 export function ScrollTop() {
@@ -30,11 +31,14 @@ export default function Rotas() {
                 <Route element={<PaginaPadrao><Outlet/></PaginaPadrao>}>
                     <Route index element={<Home />} />
                     <Route path="lista-de-desejos" element={<Wishlist/>} />
+
                     <Route path="/conta" element={<Conta><Outlet/></Conta>}>
                         <Route index element={<DadosPessoais/>}/>
                         <Route path="endereco" element={<Endereco/>}/>
                         <Route path="pagamentos" element={<Pagamento/>}/>
                     </Route>
+
+                    <Route path="/:id" element={<ProdutoEscolhido/>} />
 
                     <Route path="/produtos" element={<MainProdutos><Outlet/></MainProdutos>}>
                         <Route index element={<TodosProdutos/>} />

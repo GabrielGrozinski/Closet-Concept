@@ -112,8 +112,6 @@ const produtos = [
 interface Props {
     topicoAtual: Topico | null;
     setTopicoAtual: (v: Topico | null) => void;
-    mostrarCarrinho: boolean;
-    setMostrarCarrinho: (v: boolean) => void;
 }
 
 type produtoExtra = {subtitulo: string, linkSubtitulo: string;}
@@ -125,8 +123,8 @@ imagem?: string;
 };
 
 
-export default function HeaderFixo({topicoAtual, setTopicoAtual, setMostrarCarrinho}: Props) {
-    const {carrinhoQuantidade} = contextCart();
+export default function HeaderFixo({topicoAtual, setTopicoAtual}: Props) {
+    const {carrinhoQuantidade, setMostrarCarrinho} = contextCart();
     const {user} = contextAuth();
     const {setMenuAberto, menuAberto, mostrarSearch, setMostrarSearch, search, setSearch, setMostrarLogin} = contextFavoritos();
     const navigate = useNavigate();
