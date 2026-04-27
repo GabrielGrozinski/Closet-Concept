@@ -3,7 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom"
 import { supabase } from "../auth/supabase-client";
 import ImagensProdutos from "../components/imagensProdutos";
-import { CreditCard, Heart, Truck } from "lucide-react";
+import { ChevronDown, ChevronRight, CreditCard, ExternalLink, Heart, Truck } from "lucide-react";
+import { contextAuth } from "../context/authContext";
+import { contextFavoritos } from "../context/favoritesContext";
 
 
 type ItensBase = {
@@ -20,11 +22,37 @@ type ItensBase = {
 
 export default function ProdutoEscolhido() {
     const { id } = useParams();
+    const {user} = contextAuth();
+    const {buscarFavoritos} = contextFavoritos();
     const [produto, setProduto] = useState<ItensBase | undefined>();
     const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
     const [imagemEscolhida, setImagemEscolhida] = useState(1);
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const [mostrarImagemCheia, setMostrarImagemCheia] = useState(false);
+    const [abrirDescricao, setAbrirDescricao] = useState(false);
+    const [abrirEntrega, setAbrirEntrega] = useState(false);
+    const tamanhos = [
+        {
+            t: 'P',
+            disp: true,
+        },
+        {
+            t: 'M',
+            disp: true,
+        },
+        {
+            t: 'G',
+            disp: false,
+        },
+        {
+            t: 'GG',
+            disp: false,
+        },
+    ];
+    const [tamanhoEscolhido, setTamanhoEscolhido] = useState(tamanhos[0].t);
+    const [produtoFavoritado, setProdutoFavoritado] = useState(false);
+    const [favoritos, setFavoritos] = useState(['']);
+
 
     useEffect(() => {
         async function buscaProduto() {
@@ -90,19 +118,76 @@ export default function ProdutoEscolhido() {
         root.style.overflow = mostrarImagemCheia ? 'hidden' : 'auto';
     }, [mostrarImagemCheia]);
 
+    useEffect(() => {
+        if (!user || !produto) return;
+
+        buscarFavoritos(user).then((favoritos) => {
+            if (favoritos.length === 0) return;
+
+            const idProduto = produto.id;
+            const isFavorito = favoritos.includes(idProduto);
+
+            setProdutoFavoritado(isFavorito);
+            setFavoritos(favoritos);
+        });
+    }, [user, produto]);
+
+    async function adicionarFavoritos(id: string) {
+        if (!user) return;
+        if (favoritos.includes(id)) return;
+        const newFavoritos = [...(favoritos ?? []), id].filter((f) => f !== "");
+
+        const {error} = await supabase
+            .from('usuarios')
+            .update({
+                favoritos: newFavoritos
+            })
+            .eq('id', user.id);
+
+
+        if (error) {
+            console.error('Houve um erro', error);
+            return;
+        }
+
+        setFavoritos(newFavoritos);
+        setProdutoFavoritado(true);
+    }
+
+    async function removerFavoritos(id: string) {
+        if (!user) return;
+        if (!favoritos.includes(id)) return;
+        const newFavoritos = (favoritos ?? []).filter((f) => (f !== id) && (f !== ""));
+
+        const {error} = await supabase
+            .from('usuarios')
+            .update({
+                favoritos: newFavoritos
+            })
+            .eq('id', user.id);
+
+        if (error) {
+            console.error('Houve um erro', error);
+            return;
+        }
+
+        setFavoritos(newFavoritos);
+        setProdutoFavoritado(false);
+    }
+
 
     if (!produto) return;
 
 
     return (
-        <div className="min-h-screen grid grid-cols-[35%_1fr]">
+        <div className="min-h-screen grid grid-cols-[42.5%_1fr] bg-[rgba(250,249,247)]">
             {mostrarImagemCheia &&
                 <span className="inset-0 fixed z-1010">
                     <ImagensProdutos imagemEscolhida={imagemEscolhida} setMostrarImagemCheia={setMostrarImagemCheia} imagens={allImages} />
                 </span>
             }
 
-            <section ref={scrollRef} style={{pointerEvents: mostrarImagemCheia ? 'none' : 'auto'}} className="h-[115vh] overflow-y-auto no-scrollbar relative cursor-zoom-in">
+            <section ref={scrollRef} style={{pointerEvents: mostrarImagemCheia ? 'none' : 'auto'}} className="h-[125vh] overflow-y-auto no-scrollbar relative cursor-zoom-in">
             
                 <div className="sticky top-0 z-10 pointer-events-none">
                     <div className="absolute left-8 justify-center min-h-screen flex flex-col gap-4 pointer-events-auto pb-20">
@@ -131,7 +216,7 @@ export default function ProdutoEscolhido() {
                         onClick={() => setMostrarImagemCheia(true)}
                         ref={(el) => {(imageRefs.current[index] = el)}}
                         src={img.img}
-                        className="w-full h-[115vh] object-cover scroll-mt-[12vh]"
+                        className="w-full h-[125vh] object-cover scroll-mt-[12vh]"
                         alt={`imagem-${img.id}`}
                     />
                     ))}
@@ -139,37 +224,64 @@ export default function ProdutoEscolhido() {
 
             </section>
 
-            <section className="font-[Poppins] gap-4 flex flex-col pl-12 pr-10 pt-18">
+            <section className="font-[Poppins] gap-4 flex flex-col pl-12 pr-10 pt-6 text-[#222222] max-h-[125vh]">
+                <h1 className="flex items-center text-zinc-500 font-medium mb-2">
+                    Início
+                    <ChevronRight size={16}/>
+                    Acessórios
+                    <ChevronRight size={16}/>
+                    Bolsas
+                    <ChevronRight size={16}/>
+                    <span className="text-zinc-800">
+                        Bolsa Feminina Preta
+                    </span>
+                </h1>
+
                 <h1 className="tracking-[0.5px] font-light text-2xl">
                     {produto.nome}
                 </h1>
 
                 <span className="flex flex-col">
                     <h2 className="flex gap-2 text-xl text-neutral-800">
-                        <span className="text-base text-neutral-500 line-through flex items-center">
-                            R${produto.precoOriginal}
+                        <span className="text-base text-[#2222226a] line-through flex items-center">
+                            {produto.precoOriginal.toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                            })}
                         </span>
                         <span className="flex items-center font-semibold">
-                            R${produto.precoAtual}
+                            {produto.precoAtual.toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                            })}
                         </span>
                     </h2>
 
                     <h2 className="mt-1 flex gap-1 text-sm">
                         ou 
                         <strong className="font-semibold">
-                            R${(produto.precoAtual*0.95).toFixed(2)}
+                            {(produto.precoAtual*0.95).toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                                    })}
                         </strong> 
                         com Pix
                     </h2>
                 </span>
 
-                <h2 className="flex gap-1 items-center">
+                <h2 className="flex gap-1 items-center tracking-[0.6px] border-t border-t-black/10 pt-4 max-w-1/2">
                     <CreditCard size={22}/> 
-                    10x de <strong className="font-semibold">R${produto.precoAtual/10}</strong> sem juros
+                    <strong className="font-semibold">{produto.precoAtual.toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                    })}</strong> em até 10x de <strong className="font-semibold">{(produto.precoAtual/10).toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                    })}</strong> sem juros
                 </h2>
 
-                <div className="flex flex-col gap-1">
-                    <h1>
+                <div className="flex flex-col gap-1 mt-2">
+                    <h1 className="text-[15px]">
                         Cor: Bordo
                     </h1>
                     
@@ -180,36 +292,120 @@ export default function ProdutoEscolhido() {
                 </div>
 
                 <div className="flex items-center gap-2 mt-2">
-                    <h1>
+                    <h1 className="text-[15px]">
                         Tamanho:
                     </h1>
 
                     <aside className="flex text-sm gap-2">
-                        <span className="min-w-12 min-h-4 rounded-2xl p-1 bg-black text-white flex justify-center items-center cursor-pointer">
-                            P
-                        </span>
+                        {tamanhos.map((t, index) =>
+                            <div key={index}
+                            onClick={() => t.disp ? setTamanhoEscolhido(t.t) : false}
+                            className={`min-w-10 min-h-4 rounded-2xl p-0.5 ${
+                                t.disp ? 
+                                tamanhoEscolhido === t.t ? 'bg-black text-white cursor-pointer' 
+                                : 'bg-white text-zinc-900 border cursor-pointer' 
+                                : 'cursor-not-allowed bg-gray-300 border border-black/6 opacity-60'
+                                } flex justify-center items-`}>
+                                {t.t}
+                            </div>                        
+                        )}
 
-                        <span className="min-w-12 min-h-4 rounded-2xl p-1 bg-white text-black flex justify-center items-center border cursor-pointer">
-                            M
-                        </span>
                     </aside>
                 </div>
 
-                <section className="flex gap-4">
-                    <button className="cursor-pointer min-h-10 max-h-10 min-w-1/2 bg-black text-white p-2 rounded-md text-sm">
+                <section className="flex gap-4 mt-2">
+                    <button className="cursor-pointer min-h-10 max-h-10 min-w-2/3 bg-black text-white p-2 rounded-md text-sm transition-color duration-200 hover:bg-[#222222]">
                         Adicionar à sacola
                     </button>
 
-                    <button className="rounded-md border p-2 max-h-10 min-h-6 cursor-pointer">
-                        <Heart/>
+                    <button 
+                    onClick={() =>
+                        produtoFavoritado ?
+                            removerFavoritos(produto.id)
+                        :
+                            adicionarFavoritos(produto.id)
+                    }
+                    className={`rounded-md p-2 border max-h-10 min-h-6 cursor-pointer transition-color duration-200 hover:bg-neutral-100 ${produtoFavoritado ? 'text-red-600 border-zinc-800/50' : 'border-zinc-800/90'}`}>
+                        <Heart fill={produtoFavoritado ? 'currentColor' : 'none'}/>
                     </button>
                 </section>
 
-                <h3 className="flex gap-1 items-center -mt-2 text-neutral-700 text-sm">
-                    <Truck size={18}/> 
+                <h3 className="flex gap-1 items-center -mt-1.5 text-neutral-700 text-sm animate-bounce">
+                    <Truck className="" size={18}/> 
                     frete grátis!
                 </h3>
 
+                <div className="flex flex-col gap-2 mt-4 mb-2 max-w-2/3">
+                    <h2>
+                        Entrega
+                    </h2>
+
+                    <div className="flex gap-2 items-start justify-between min-h-8 max-h-12">
+                        <div className="flex flex-col gap-1  flex-1">
+                            <input className="p-2 pl-0 pb-0 border-b border-zinc-600 outline-0 min-h-8 max-h-8 text-sm" placeholder="Digite aqui o CEP" type="text" name="" id="" />
+
+                            <h3 className="underline hover:text-blue-700 cursor-pointer text-xs mt-1 max-w-34 flex gap-1 items-center">
+                                Não sei meu CEP
+                                <ExternalLink size={14}/>
+                            </h3>
+                        </div>
+
+                        <button onClick={() => setAbrirEntrega(true)} className="min-h-4 max-h-8 min-w-30 p-2 border border-black/90 flex items-center justify-center text-xs font-light transition-all duration-200 hover:bg-neutral-800 hover:text-white cursor-pointer">
+                            Consultar
+                        </button>
+                    </div>
+
+                    <div className={`flex flex-col gap-1 transition-all duration-200 overflow-hidden ${abrirEntrega ? 'max-h-20 mt-4' : 'max-h-0'}`}>
+                        <article className="flex justify-between pb-1 border-b border-b-zinc-800/10 text-xs items-center text-zinc-700">
+                            <h2>
+                                <span className="font-medium">
+                                    Normal
+                                </span>
+                                <br />
+                                Em até 10 dias úteis
+                            </h2>
+
+                            <h2 className="font-semibold">
+                                {16.47.toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                                })}
+                            </h2>
+                        </article>
+
+                        <article className="flex justify-between pb-1 border-b border-b-zinc-800/10 text-xs items-center text-zinc-700">
+                            <h2>
+                                <span className="font-medium">
+                                    Rápido
+                                </span>
+                                <br />
+                                Em até 6 dias úteis
+                            </h2>
+
+                            <h2 className="font-semibold">
+                                {17.13.toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                                })}
+                            </h2>
+                        </article>
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-4 border-b border-b-black/6 max-w-2/3 mt-2 cursor-pointer" onClick={() => setAbrirDescricao(!abrirDescricao)}>
+                    <h2 className="text-[17px]">
+                        Sobre a peça
+                    </h2>
+
+                    <span className="flex items-center justify-between text-[13px] text-zinc-700">
+                        Descrição
+                        <ChevronDown size={26} className={`${abrirDescricao && 'rotate-180'} transition-all duration-200`} color="#000"/>
+                    </span>
+
+                    <p className={`text-xs text-neutral-700 overflow-hidden transition-all duration-200 ${abrirDescricao ? 'max-h-20 min-h-2 pb-4' : 'max-h-0 min-h-0'}`}>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores sint ratione cumque consequatur laboriosam minus, itaque ducimus illum est modi accusamus voluptate explicabo esse consectetur quis sequi qui maxime architecto.
+                    </p>
+                </div>
 
             </section>
         </div>
