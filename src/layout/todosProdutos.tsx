@@ -1,4 +1,4 @@
-import CardProduto from "../components/produtos";
+import Produtos from "../components/produtos";
 import { contextFavoritos } from "../context/favoritesContext";
 import { obterFiltros, separarFiltros, filtroSupabase } from "../hooks/filtrosHooks";
 import { useEffect, useMemo, useState } from "react";
@@ -180,6 +180,6 @@ export default function TodosProdutos() {
 
     
     return (
-        <CardProduto itens={itensOrdenados}/>
+        <Produtos itens={itensOrdenados}/>
     );
 }

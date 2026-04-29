@@ -9,6 +9,7 @@ type ItensCarrinhoBase = {
     tamanho: string;
     cor: string;
     quantidade: number;
+    nomeId: string;
 }
 
 interface CartType {

@@ -51,8 +51,8 @@ export default function PaginaPadrao({children}: Props) {
     }, [window.innerWidth]);
 
     useEffect(() => {
-        root.style.overflowY = (mostrarCarrinho || mostrarFiltroModal) ? 'hidden' : 'auto';
-    }, [mostrarCarrinho, mostrarFiltroModal]);
+        root.style.overflowY = (mostrarCarrinho || mostrarFiltroModal || mostrarLogin) ? 'hidden' : 'auto';
+    }, [mostrarCarrinho, mostrarFiltroModal, mostrarLogin]);
 
 
     return (

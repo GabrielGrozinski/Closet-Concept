@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import CardProduto from "../components/produtos";
+import Produtos from "../components/produtos";
 import { contextFavoritos } from "../context/favoritesContext";
 import { contextAuth } from "../context/authContext";
 import { supabase } from "../auth/supabase-client";
+import TelaLoading from "../layout/telaLoading";
 
 type ItensBase = {
     id: string;
@@ -20,9 +21,14 @@ export default function Wishlist() {
     const {buscarFavoritos, setMostrarLogin} = contextFavoritos();
     const [itens, setItens] = useState<ItensBase[]>([]);
     const [hasFavoritos, setHasFavoritos] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!user) return setMostrarLogin(true);
+        if (!user) {
+            setLoading(false);
+            return setMostrarLogin(true);
+        }
+        setLoading(true);
         setMostrarLogin(false);
         const handleFavoritos = async () => {
             const favoritos = await buscarFavoritos(user);
@@ -42,17 +48,20 @@ export default function Wishlist() {
 
             setItens(data);
             setHasFavoritos(true);
+            setLoading(false);
         };
 
         handleFavoritos();
     }, [user]);
+
+    if (loading) return (<TelaLoading/>)
 
     
     return (
         <div className="min-h-screen bg-[rgba(250,249,247)] pt-4">
             <h1 className="font-[Poppins] font-medium sm:text-2xl text-xl sm:ml-34 text-center sm:text-left mb-4">Lista de Desejos</h1>
             {hasFavoritos ?
-            <CardProduto itens={itens}/>
+            <Produtos itens={itens}/>
             :
             <h1 onClick={() => setMostrarLogin(true)} className="text-center font-bold font-[Poppins] text-xl mt-[35vh]">
                 Adicione algum produto à sua lista de favoritos

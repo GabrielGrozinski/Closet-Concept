@@ -10,6 +10,7 @@ import MainProdutos from "./pages/baseProdutos";
 import TodosProdutos from "./layout/todosProdutos";
 import Pagamento from "./layout/conta/pagamentos";
 import ProdutoEscolhido from "./layout/produtoEscolhido";
+import Teste from "./pages/teste";
 
 
 export function ScrollTop() {
@@ -44,6 +45,8 @@ export default function Rotas() {
                         <Route index element={<TodosProdutos/>} />
                     </Route>
                 </Route>
+
+                <Route path="teste" element={<Teste/>}/>
 
             </Routes>
         </HashRouter>

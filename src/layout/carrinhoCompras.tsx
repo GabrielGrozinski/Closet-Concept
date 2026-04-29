@@ -1,10 +1,12 @@
 import { X, Trash, Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { contextCart } from "../context/cartContext";
+import { useNavigate } from "react-router-dom";
 
 
 
 export default function CarrinhoDeCompras() {
+    const navigate = useNavigate();
     const {carrinho, setCarrinho, removerItem, adicionarItemCarrinho, carrinhoQuantidade, mostrarCarrinho, setMostrarCarrinho} = contextCart();
     const [valorFinal, setValorFinal] = useState('0,00');
     const [valorDesconto, setValorDesconto] = useState('0,00');
@@ -129,16 +131,24 @@ export default function CarrinhoDeCompras() {
                     className="grid grid-cols-[20%_1fr_15%_10%] grid-rows-2 border-b border-b-black/6 pb-4 max-h-38 min-h-38 pt-4"
                     >
                     <img
-                        className="row-span-full col-1 rounded-lg min-h-32 max-h-32 object-cover min-w-full"
+                        onClick={() => {
+                            navigate(`/${item.nomeId}`);
+                            setMostrarCarrinho(false);
+                        }}
+                        className="row-span-full col-1 rounded-lg min-h-32 max-h-32 object-cover min-w-full cursor-pointer"
                         src={item.imagem}
                         alt={item.nome}
                     />
 
-                    <p className="col-[2/4] row-1 self-center px-4 font-[Poppins] text-xs">
+                    <p className="col-[2/4] row-1 self-center px-4 font-[Poppins] text-xs flex flex-col">
                         {item.nome}
+
+                        <span className="text-[10px] text-zinc-700">
+                            Tamanho: {item.tamanho}
+                        </span>
                     </p>
 
-                    <div className="min-w-[48%] self-center max-w-[48%] ml-4 h-[55%] row-2 col-2 border border-slate-500/20 grid grid-cols-3 overflow-hidden items-center">
+                    <div className="min-w-[48%] self-center max-w-[48%] ml-4 h-[55%] row-2 col-2 border border-slate-500/20 grid grid-cols-3 overflow-hidden items-center rounded-lg">
                         <button
                         onClick={() => alterarQuantidade(index, item.quantidade - 1)}
                         className="cursor-pointer flex items-center justify-center hover:bg-gray-200 min-h-full"
@@ -148,7 +158,7 @@ export default function CarrinhoDeCompras() {
 
                         <input
                         type="text"
-                        className="min-h-full text-center text-sm text-neutral-800 outline-0"
+                        className="min-h-full text-center text-sm font-medium text-neutral-800 outline-0 pb-0.5"
                         value={item.quantidade}
                         onChange={(e) => handleInputQuantidade(index, Number(e.target.value))}
                         />
@@ -209,12 +219,14 @@ export default function CarrinhoDeCompras() {
 
                 <article className="flex justify-between text-sm">
                     <h1 className="font-bold text-lg">Total</h1>
-                    <h2 className="flex items-center gap-1">
-                        <span className="font-bold text-lg">
-                            {valorFinal} 
-                        </span> 
-                        ou 12x de {valorParcelado}
-                    </h2>
+                    <span className="flex flex-col">
+                        <h2 className="flex items-center gap-1">
+                            <span className="font-bold text-lg">
+                                {valorFinal}
+                            </span>
+                            ou 12x de {valorParcelado}
+                        </h2>
+                    </span>
                 </article>
 
                 <nav className="grid grid-cols-2 gap-4 pb-2">

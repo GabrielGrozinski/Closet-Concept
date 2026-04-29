@@ -23,13 +23,21 @@ interface Props {
 }
 
 
-export default function CardProduto({itens}: Props) {
+export function CardProduto({itens}: Props) {
     const navigate = useNavigate();
     const { session, user } = contextAuth();
     const {adicionarItemCarrinho, setMostrarCarrinho} = contextCart();
     const {buscarFavoritos} = contextFavoritos();
     const [favoritos, setFavoritos] = useState(['']);
     const [itemCarrinho, setItemCarrinho] = useState<ItensBase | undefined>();
+
+    useEffect(() => {
+        if (itemCarrinho) {
+            setTimeout(() => {
+                setItemCarrinho(undefined);
+            }, 2000);
+        }
+    }, [itemCarrinho]);
 
     useEffect(() => {
         if (!user) return;
@@ -77,21 +85,9 @@ export default function CardProduto({itens}: Props) {
         setFavoritos(newFavoritos);
     }
 
-    useEffect(() => {
-        if (itemCarrinho) {
-            setTimeout(() => {
-                setItemCarrinho(undefined);
-            }, 2000);
-        }
-    }, [itemCarrinho]);
-
 
     return (
-        <div className="p-4">
-            <main
-            style={{ rowGap: '46px' }}
-            className="grid sm:px-4 sm:gap-10 justify-center sm:grid-cols-[repeat(auto-fit,minmax(222px,222px))] grid-cols-2 gap-2"
-            >
+        <>
             {itens.map((item) => 
                 <article
                     onClick={() => navigate(`/${item.nomeId}`)}
@@ -114,10 +110,10 @@ export default function CardProduto({itens}: Props) {
                                 adicionarFavoritos(item.id);
                             }
                         }}
-                        className="absolute sm:top-1.5 sm:right-1.5 top-1 right-1 bg-white sm:p-2 p-1 rounded-full cursor-default hover:bg-[#fff6ea]"
+                        className="absolute sm:top-1.5 sm:right-1.5 top-1 right-1 bg-white p-1 sm:p-1.25 rounded-full cursor-default hover:bg-[#fff6ea]"
                     >
                         <Heart 
-                            className="text-red-400 text-shadow-[1px_1px_1px_#0000008a] max-h-4 max-w-4 sm:max-w-6 sm:max-h-6" 
+                            className="text-red-400 text-shadow-[1px_1px_1px_#0000008a] max-h-4 max-w-4 sm:max-w-5 sm:max-h-5" 
                             fill={favoritos.includes(item.id) ? "currentColor" : "none"}
                         />
                     </span>
@@ -186,6 +182,19 @@ export default function CardProduto({itens}: Props) {
                     </div>
                 </article>
             )}
+        </>
+    )
+}
+
+
+export default function Produtos({itens}: Props) {
+    return (
+        <div className="p-4">
+            <main
+            style={{ rowGap: '46px' }}
+            className="grid sm:px-4 sm:gap-10 justify-center sm:grid-cols-[repeat(auto-fit,minmax(222px,222px))] grid-cols-2 gap-2"
+            >
+                <CardProduto itens={itens}/>
             </main>
         </div>
     )
