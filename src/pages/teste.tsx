@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import fundo from '../assets/fundo.png';
-import { Home, Box, User, FolderOpen, Rocket, Mail, ChevronDown, ArrowRight, Eye } from "lucide-react";
+import { Home, Box, User, FolderOpen, Rocket, Mail, ChevronDown, ArrowRight, Eye, Code, Globe, Target, LineChart, Bot, Settings } from "lucide-react";
+import perfil from '../assets/perfil.png';
 
 
 export default function Teste() {
@@ -11,6 +12,53 @@ export default function Teste() {
             desc: 'Desenvolvedor Full-Stack criando experiências digitais inovadoras com paixão e precisão.',
             btn_falar: 'Fale Comigo',
             btn_projeto: 'Ver Projetos'
+        },
+        main: {
+            servico: {
+                title: 'Meus Serviços',
+                subtitle: 'O que faço',
+                desc: 'Soluções eficazes para aumentar sua visibiliade e imapcto no mundo digital.',
+                projetos: [
+                    {
+                        title: 'Software Developer',
+                        desc: 'Desenvolvimento de soluções completas com tecnologias modernas do mercado.',
+                        rodape: 'Full Stack',
+                        icone: <Code size={30}/>
+                    },
+                    {
+                        title: 'Sites Profissionais',
+                        desc: 'Sites rápidos, modernos e pensados para conversão. Presença digital que gera credibilidade e atrai clientes.',
+                        rodape: 'Web',
+                        icone: <Globe size={30}/>
+                    },
+                    {
+                        title: 'Marketing Digital',
+                        desc: 'Estratégias completas de marketing digital para aumentar a presença e visibilidade da sua marca.',
+                        rodape: 'Digital',
+                        icone: <Target size={30}/>
+                    },
+                    {
+                        title: 'Tráfego Pago',
+                        desc: 'Gestão inteligente de campanhas patrocinadas para maximizar conversões e resultados.',
+                        rodape: 'Ads',
+                        icone: <LineChart size={30}/>
+                    },
+                    {
+                        title: 'Automações',
+                        desc: 'Automatize processos e reduza trabalho manual. Chatbots, fluxos de atendimento e rotinas inteligentes.',
+                        rodape: 'Automação',
+                        icone: <Bot size={30}/>
+                    },
+                    {
+                        title: 'Sistemas Personalizados',
+                        desc: 'Soluções sob medida para organizar e escalar seu negócio. Painéis, CRMs e ERPs do jeito que você precisa.',
+                        rodape: 'Sistemas',
+                        icone: <Settings size={30}/>
+                    },
+                ],
+                btn_orcamento: 'Faça um orçamento'
+
+            }
         }
     }
 
@@ -77,6 +125,37 @@ export default function Teste() {
     }
     const [lang, setLang] = useState('br');
 
+    const [textoAtual, setTextoAtual] = useState("");
+    const [i, setI] = useState(0);
+    const [apagando, setApagando] = useState(false);
+
+    useEffect(() => {
+        let timeout;
+
+        const textoCompleto = traducao.br.header.tipos[i];
+
+        if (!apagando) {
+        timeout = setTimeout(() => {
+            setTextoAtual(textoCompleto.substring(0, textoAtual.length + 1));
+
+            if (textoAtual.length + 1 === textoCompleto.length) {
+            setTimeout(() => setApagando(true), 1500);
+            }
+        }, 100);
+        } else {
+        timeout = setTimeout(() => {
+            setTextoAtual(textoCompleto.substring(0, textoAtual.length - 1));
+
+            if (textoAtual.length === 0) {
+            setApagando(false);
+            setI((prev) => (prev + 1) % traducao.br.header.tipos.length);
+            }
+        }, 50);
+        }
+
+        return () => clearTimeout(timeout);
+    }, [textoAtual, apagando, i]);
+
     useEffect(() => {
         const interval = setInterval(() => {
             setTamanho((prev) => {
@@ -100,10 +179,10 @@ export default function Teste() {
 
 
     return (
-        <div className={`font-[Poppins] min-h-[140vh] flex flex-col bg-[#020617] pt-28 px-[10%]`}>
-            <img className="fixed inset-0 opacity-2 object-cover" src={fundo} alt="" />
+        <div className={`font-[Poppins] min-h-[340vh] flex flex-col bg-[#020617] pt-28`}>
+            <img className="fixed z-1 inset-0 opacity-2 object-cover" src={fundo} alt="" />
 
-            <header className={`fixed top-0 left-0 right-0 transition-all duration-200 min-h-28 max-h-28 p-4 py-6 grid grid-cols-[15%_1fr_20%] justify-items-center items-center px-[7.5%] border-b border-transparent z-999 ${!scrollado ? 'border-transparent bg-transparent' : 'border-zinc-800/10 bg-linear-to-r from-[#2222225a] to-black/50'}`}>
+            <header className={`fixed top-0 left-0 right-0 transition-all duration-200 min-h-21 max-h-21 grid grid-cols-[15%_1fr_20%] justify-items-center items-center px-[7.5%] border-b z-999 ${!scrollado ? 'border-b-[#02061701] bg-[#02061701]' : 'border-b-zinc-300/8 bg-linear-to-r from-[#010517] to-black'}`}>
                 <span className="flex items-center gap-2">
                     <svg
                         width="42"
@@ -192,7 +271,7 @@ export default function Teste() {
                 </section>
             </header>
 
-            <header className="min-h-screen flex justify-between pt-10">
+            <header className="min-h-screen pt-10 z-1 px-[10%]">
                 <div className="absolute top-0 right-0 w-100 h-100 bg-blue-500 opacity-35 blur-[120px] rounded-full translate-x-1/4 -translate-y-1/4"></div>
                 <div className="absolute bottom-0 left-0 w-60 h-60 bg-blue-700 opacity-60 -translate-x-1/4 translate-y-1/4 blur-[120px] rounded-full"></div>
                 <div
@@ -203,41 +282,113 @@ export default function Teste() {
                     }}
                 />
 
-                <section className="flex flex-col gap-8">
-                    <h1 className="text-center text-xs font-medium px-2.75 bg-[#091133] border border-[#00D4FF4a] text-[#17c9ff] text-shadow-xs mr-auto p-2 rounded-full">
-                        {traducao.br.header.title}
-                    </h1>
+                <div className="flex items-center justify-between">
+                    <section className="flex flex-col gap-8">
+                        <h1 className="text-center text-xs font-medium px-2.75 bg-[#091133] border border-[#00D4FF4a] text-[#17c9ff] text-shadow-xs mr-auto p-2 rounded-full">
+                            {traducao.br.header.title}
+                        </h1>
 
-                    <h1 className="text-white text-6xl text-shadow-sm tracking-[1.2px] font-medium">
-                        <span className="text-7xl">G</span>abriel
-                        <br />
-                        <span className="text-[#298ee9]">
-                            <span className="text-7xl">G</span>rozinski
-                        </span>
-                    </h1>
+                        <h1 className="text-white text-6xl text-shadow-sm tracking-[1.2px] font-medium">
+                            <span className="text-7xl">G</span>abriel
+                            <br />
+                            <span className="text-[#298ee9]">
+                                <span className="text-7xl">G</span>rozinski
+                            </span>
+                        </h1>
 
-                    <h2 className="text-2xl text-[#298ee9] font-medium font-mono">
-                        {traducao.br.header.tipos[0]}
-                    </h2>
+                        <h2 className="text-2xl bg-linear-to-r from-[#52aeff] bg-clip-text text-transparent via-[#0377de] to-[#047fea] font-medium font-mono text-shadow-[1px_1px_1px_#ffffff3a]">
+                            {textoAtual}
+                            <span className="text-neutral-200 text-shadow-sm">
+                                |
+                            </span>
+                        </h2>
 
-                    <p className="text-xl text-neutral-200 font-medium">
-                        {traducao.br.header.desc}
-                    </p>
+                        <p className="text-slate-400 font-medium max-w-3/4 text-shadow-sm">
+                            {traducao.br.header.desc}
+                        </p>
 
-                    <section className="flex gap-4">
-                        <button className="p-3 text-white shadow-[0px_2px_5px_#ffffff3a] bg-linear-to-r from-[#00D4FF] via-[#3B82F6] to-[#3B82F6] flex justify-center items-center gap-4 text-xl rounded-2xl">
-                            {traducao.br.header.btn_falar}
-                            <ArrowRight/>
-                        </button>
+                        <section className="flex gap-4 font-semibold">
+                            <button className="p-4 text-white shadow-[0px_2px_5px_#ffffff3a] bg-linear-to-r from-[#00a6ff] via-[#3B82F6] to-[#692ffc] text-[15px] flex justify-center items-center gap-2.25 rounded-full tracking-[0.6px] px-6.5 cursor-pointer transition-all duration-220 hover:-translate-y-2 hover:shadow-[0px_2px_12px_#ffffff5a]">
+                                {traducao.br.header.btn_falar}
+                                <ArrowRight/>
+                            </button>
 
-                        <button className="p-3 text-white bg-[#090e21] border border-slate-800/10 rounded-2xl flex justify-center items-center gap-4 text-xl">
-                            <Eye/>
-                            {traducao.br.header.btn_projeto}
-                        </button>
+                            <button className="p-4 text-white bg-[#13192f] border border-slate-400/24 rounded-full flex justify-center items-center gap-2.25 text-[15px] tracking-[0.6px] px-6.5 cursor-pointer transition-all duration-220 hover:-translate-y-2 hover:border-[#00a6ff8c]">
+                                <Eye/>
+                                {traducao.br.header.btn_projeto}
+                            </button>
+                        </section>
                     </section>
-                </section>
+
+                    <img className="object-cover rounded-full max-w-[40vw] max-h-[40vw] mr-auto shadow-[10px_0px_20px_#0000002a]" src={perfil} alt="" />
+                </div>
 
             </header>
+
+            <main className="pt-[10vh]">
+                <section className="flex flex-col items-center justify-center pt-16 pb-26 gap-6 relative px-[10%] bg-linear-to-b from-[#020617] via-[#050818] to-[#0c1025]">
+                        <div className="absolute top-0 right-0 w-100 h-100 bg-blue-500 opacity-35 blur-[120px] rounded-full translate-x-[42%] -translate-y-1/3"></div>
+                        <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-700 opacity-35 -translate-x-[46%] translate-y-[60%] blur-[120px] rounded-full"></div>
+
+                        <h1 className="text-center text-sm font-medium px-3.5 bg-[#091133] border border-[#00D4FF4a] text-[#17c9ff] text-shadow-xs p-2 rounded-full uppercase tracking-[1px] z-2">
+                            {traducao.br.main.servico.title}
+                        </h1>
+
+                        <h1 className="text-[#298ee9] text-6xl text-shadow-sm tracking-[1.2px] font-medium z-2">
+                            {traducao.br.main.servico.subtitle}
+                        </h1>
+
+                        <p className="text-slate-400 font-medium max-w-[40%] text-center text-shadow-sm z-2">
+                            {traducao.br.main.servico.desc}
+                        </p>
+
+                        <section className="flex flex-wrap gap-6 mt-10 z-2">
+                            {traducao.br.main.servico.projetos.map((p, index) =>
+                                <article
+                                key={index}
+                                className="rounded-[8%] min-h-84 max-h-92 min-w-[25vw] max-w-[25vw] p-6.5 px-10 bg-[#070c23] border border-slate-500/10 grid grid-rows-[1fr_50%_1fr] justify-items-start group hover:shadow-[0px_1px_8px_#ffffff4a] hover:border-[#00a6ff7a] relative transition-all duration-400 ease hover:-translate-y-1.75"
+                                >
+                                    <div
+                                    className="absolute inset-0 group-hover:bg-sky-300/12 bg-white/2 transition-all duration-200 rounded-[8%]"
+                                    />
+
+                                    <span className="shadow-[0px_0px_10px_#ffffff4a] bg-linear-to-b from-[#00a6ff] mt-auto via-[#3B82F6] to-[#3B82F6] group-hover:shadow-[0px_2px_6px_#ffffff3a] group-hover:rotate-4 transition-all duration-400 group-hover:scale-110 rounded-2xl p-4 text-white">
+                                        {p.icone}
+                                    </span>
+
+                                    <div className="text-shadow-lg flex flex-col gap-2 mt-6">
+                                        <h1 className="text-white text-xl font-semibold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-linear-to-r group-hover:from-[#00a6ff] group-hover:via-[#3B82F6] group-hover:to-[#3B82F6]">
+                                            {p.title}
+                                        </h1>
+
+                                        <p className="text-slate-300/70 leading-6 text-sm mt-0.5">
+                                            {p.desc}
+                                        </p>
+                                    </div>
+
+                                    <div className="py-4 border-t border-t-neutral-400/10 grid grid-cols-[33%_1fr] items-center min-w-full gap-2">
+                                        <h2 className="text-center text-xs font-medium px-2.75 bg-[#091133] border border-[#00D4FF4a] text-[#17c9ff] text-shadow-xs p-2 rounded-full flex items-center justify-center mr-auto">
+                                            {p.rodape}
+                                        </h2>
+
+                                        <span className="min-h-0.75 max-h-0.75 bg-linear-to-r from-neutral-400/10 via-neutral-400/4 to-neutral-400/0">
+
+                                        </span>
+                                    </div>
+                                </article>
+                            )}
+                        </section>
+
+                        <button className="p-5 text-white shadow-[0px_2px_5px_#ffffff3a] bg-linear-to-r from-[#00a6ff] via-[#3B82F6] to-[#692ffc] flex justify-center items-center gap-2.25 rounded-full tracking-[0.6px] px-7 cursor-pointer transition-all duration-220 hover:-translate-y-2 hover:shadow-[0px_2px_12px_#ffffff5a] mt-8 font-semibold z-2 group relative overflow-hidden">
+                            {traducao.br.main.servico.btn_orcamento}
+                            <ArrowRight/>
+
+                            <div
+                            className="absolute min-h-full w-1/4 left-0 -translate-x-10 transition-all duration-220 bg-red-400 blur-[120px] rounded-full group-hover:left-full group-hover:translate-x-10"
+                            />
+                        </button>
+                </section>
+            </main>
         </div>
     )
 }
