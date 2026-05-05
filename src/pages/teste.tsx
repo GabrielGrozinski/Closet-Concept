@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import fundo from '../assets/fundo.png';
-import { Home, Box, User, FolderOpen, Rocket, Mail, ChevronDown, ArrowRight, Eye, Code, Globe, Target, LineChart, Bot, Settings, Check, ExternalLink } from "lucide-react";
+import { Home, Box, User, FolderOpen, Rocket, Mail, ChevronDown, ArrowRight, Eye, Code, Globe, Target, LineChart, Bot, Settings, Check, ExternalLink, LocateFixed, ArrowRightCircle, ArrowUp } from "lucide-react";
 import perfil from '../assets/perfil.png';
 import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import confereAe from '../assets/confere-ae.png';
@@ -258,9 +258,19 @@ export default function Teste() {
                         p: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus, debitis!',
                         skills: ['Vue.js', 'Supabase', 'Bootstrap'],
                         tipo: ['Websites', 'Todos'],
-                        btn_texto: 'Visitar'
+                        btn_texto: 'Visitar',
+                        link: 'https://confereae.com.br'
                     }
                 ] 
+            },
+            contato: {
+                titulo: "Contato",
+                subtitulo: "Vamos Conversar?",
+                p: "Estou disponível para novos projetos e para um emprego efetivo",
+                email: 'E-mail',
+                loc: 'Localização',
+                wpp: 'Fale comigo pelo WhatsApp',
+                redes: 'Minhas Redes'
             }
         }
     }
@@ -284,6 +294,7 @@ export default function Teste() {
     const [tamanho, setTamanho] = useState(200);
     const [crescendo, setCrescendo] = useState(true);
     const [scrollado, setScrollado] = useState(false);
+    const [mostrarSetaScroll, setMostrarSetaScroll] = useState(false);
     const topicosHeader = [
         {
             texto: 'Início',
@@ -374,7 +385,10 @@ export default function Teste() {
     }, [crescendo]);
 
     useEffect(() => {
-        const handleScroll = () => setScrollado(window.scrollY > 20);
+        const handleScroll = () => {
+            setScrollado(window.scrollY > 20);
+            setMostrarSetaScroll(window.scrollY > window.innerHeight*0.6);
+        };
 
         window.addEventListener('scroll', handleScroll);
 
@@ -383,8 +397,18 @@ export default function Teste() {
 
 
     return (
-        <div className={`font-[Poppins] min-h-[640vh] flex flex-col bg-[#020617] pt-28`}>
+        <div className={`font-[Poppins] flex flex-col bg-[#020617] pt-28`}>
             <img className="fixed z-1 inset-0 opacity-2 object-cover" src={fundo} alt="" />
+
+            <div
+            onClick={() => window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            })}
+            className={`fixed bottom-0 right-0 p-3.5 text-shadow-xl bg-blue-500 shadow-[0px_0px_12px_#ffffff6a] transition-all duration-200 rounded-full text-white z-3 cursor-pointer ${mostrarSetaScroll ? '-translate-1/2' : '-translate-x-1/2 translate-y-full'}`}
+            >
+                <ArrowUp size={24}/>
+            </div>
 
             <header className={`fixed top-0 left-0 right-0 transition-all duration-200 min-h-21 max-h-21 grid grid-cols-[15%_1fr_20%] justify-items-center items-center px-[7.5%] border-b z-999 ${!scrollado ? 'border-b-[#02061701] bg-[#02061701]' : 'border-b-zinc-300/8 bg-linear-to-r from-[#03050d] to-[#020510]'}`}>
                 <span className="flex items-center gap-2">
@@ -524,7 +548,7 @@ export default function Teste() {
                         </section>
                     </section>
 
-                    <img className="object-cover rounded-full max-w-[40vw] max-h-[40vw] mr-auto shadow-[10px_0px_20px_#0000002a]" src={perfil} alt="" />
+                    <img className="object-cover rounded-full max-w-[40vw] max-h-[40vw] mr-auto shadow-[0px_0px_20px_#0000006a]" src={perfil} alt="" />
                 </div>
 
             </header>
@@ -593,9 +617,9 @@ export default function Teste() {
                         </button>
                 </section>
 
-                <section className="grid grid-cols-2 px-[10%] items-center gap-10 pt-24">
-                    <div className="flex-1 place-self-end self-center">
-                        <img className="min-h-[80vh] max-h-[80vh] object-cover rounded-xl" src={perfil} alt="" />
+                <section className="grid grid-cols-2 px-[10%] items-center gap-10 pt-24 pb-14">
+                    <div className="flex-1 place-self-center">
+                        <img className="min-h-[80vh] max-h-[80vh] max-w-[70vh] object-cover rounded-xl" src={perfil} alt="" />
                     </div>
 
                     <article className="flex flex-col gap-6 items-start z-2">
@@ -610,7 +634,7 @@ export default function Teste() {
                             </span>
                         </h1>
 
-                        <p className="text-neutral-300 text-shadow-sm tracking-wide">
+                        <p className="text-slate-400 text-shadow-sm tracking-wide">
                             {traducao.br.main.sobre_mim.p_1}
                             <div className="my-6"></div>
                             {traducao.br.main.sobre_mim.p_2}
@@ -735,7 +759,159 @@ export default function Teste() {
                             )}
                     </section>
                 </section>
+
+                <section className="flex flex-col items-center justify-center pt-16 pb-26 gap-6 relative px-[12%] bg-linear-to-b from-[#020617] via-[#050818] to-[#0c1025] overflow-hidden">
+                    <div className="absolute top-0 left-1/2 w-100 h-100 bg-blue-500 opacity-35 blur-[120px] rounded-full -translate-x-1/2"></div>
+                    <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-700 opacity-35 translate-x-[46%] translate-y-[20%] blur-[120px] rounded-full"></div>
+                    <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-700 opacity-35 -translate-x-[46%] translate-y-[20%] blur-[120px] rounded-full"></div>
+
+                    <h1 className="text-center text-sm font-medium px-5 bg-[#091133] border border-[#00D4FF4a] text-[#17c9ff] text-shadow-xs p-2 rounded-full uppercase tracking-[1.2px] z-2">
+                        {traducao.br.main.contato.titulo}
+                    </h1>
+
+                    <h1 className="text-[#298ee9] text-6xl text-shadow-sm tracking-[1.2px] font-medium z-2">
+                        {traducao.br.main.contato.subtitulo}
+                    </h1>
+
+                    <p className="text-slate-400 font-medium max-w-[40%] text-center text-shadow-sm z-2">
+                        {traducao.br.main.contato.p}
+                    </p>
+
+                    <section className="flex justify-center gap-6 min-w-full z-2 mt-6">
+                        <article className="bg-[#101632] rounded-2xl border border-slate-800 p-6 px-8 gap-4 flex items-center justify-center transition-all duration-220 hover:-translate-y-1.5 hover:border-sky-400/40 hover:shadow-[0px_1px_4px_#ffffff1a]">
+                            <span className="text-white bg-blue-400 p-4 rounded-xl">
+                                <Mail />
+                            </span>
+
+                            <div className="flex flex-col justify-between gap-1">
+                                <h1 className="text-slate-500 text-sm font-medium">
+                                    {traducao.br.main.contato.email}
+                                </h1>
+
+                                <h2 className="text-white font-medium">
+                                    gabrielgrozinski@gmail.com
+                                </h2>
+                            </div>
+                        </article>
+                        
+                        <article className="bg-[#101632] rounded-2xl border border-slate-800 p-6 px-8 gap-4 flex items-center justify-center transition-all duration-220 hover:-translate-y-1.5 hover:border-sky-400/40 hover:shadow-[0px_1px_4px_#ffffff1a]">
+                            <span className="text-white bg-blue-400 p-4 rounded-xl">
+                                <LocateFixed />
+                            </span>
+
+                            <div className="flex flex-col justify-between gap-1">
+                                <h1 className="text-slate-500 text-sm font-medium">
+                                    {traducao.br.main.contato.loc}
+                                </h1>
+
+                                <h2 className="text-white font-medium">
+                                    Peruíbe - SP, Brasil
+                                </h2>
+                            </div>
+                        </article>
+                    </section>
+
+                    <button className="p-5 text-white text-lg shadow-[0px_2px_5px_#ffffff3a] hover:bg-[#38da74] bg-[#25D366] flex justify-center items-center gap-2.5 rounded-2xl px-7 cursor-pointer transition-all duration-320 hover:-translate-y-1 hover:shadow-[0px_2px_12px_#ffffff5a] mt-4 tracking-wider z-2 group relative overflow-hidden">
+                        <span className="w-13.5 h-13.5 bg-green-200/30 flex items-center justify-center rounded-xl cursor-pointer transition-all duration-150 hover:bg-[#27e76e]">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="40" width="40" viewBox="-83.77245 -140.29175 726.0279 841.7505">
+                                <path d="M407.185 336.283c-6.948-3.478-41.108-20.284-47.477-22.606-6.368-2.318-11-3.476-15.632 3.478-4.632 6.954-17.948 22.606-22.001 27.244-4.052 4.636-8.106 5.218-15.054 1.738-6.948-3.477-29.336-10.813-55.874-34.486-20.655-18.424-34.6-41.176-38.652-48.132-4.054-6.956-.434-10.716 3.045-14.18 3.127-3.114 6.95-8.116 10.423-12.174 3.474-4.056 4.632-6.956 6.948-11.59 2.316-4.639 1.158-8.695-.58-12.172-1.736-3.478-15.632-37.679-21.422-51.592-5.64-13.547-11.368-11.712-15.633-11.927-4.048-.201-8.685-.244-13.316-.244-4.632 0-12.16 1.739-18.53 8.693-6.367 6.956-24.317 23.767-24.317 57.964 0 34.202 24.896 67.239 28.371 71.876 3.475 4.639 48.993 74.818 118.695 104.914 16.576 7.16 29.518 11.434 39.609 14.636 16.644 5.289 31.79 4.542 43.763 2.753 13.349-1.993 41.108-16.807 46.898-33.036 5.79-16.233 5.79-30.144 4.052-33.041-1.736-2.899-6.368-4.638-13.316-8.116m-126.776 173.1h-.093c-41.473-.016-82.15-11.159-117.636-32.216l-8.44-5.01-87.475 22.947 23.348-85.288-5.494-8.745c-23.136-36.798-35.356-79.328-35.338-123 .051-127.431 103.734-231.106 231.22-231.106 61.734.022 119.763 24.094 163.402 67.782 43.636 43.685 67.653 101.754 67.629 163.51-.052 127.442-103.733 231.126-231.123 231.126M477.113 81.55C424.613 28.989 354.795.03 280.407 0 127.136 0 2.392 124.736 2.33 278.053c-.02 49.011 12.784 96.847 37.118 139.019L0 561.167l147.41-38.668c40.617 22.153 86.346 33.83 132.886 33.845h.114c153.255 0 278.01-124.748 278.072-278.068.028-74.301-28.869-144.165-81.369-196.725" fill="#FFF" fill-rule="evenodd"/>
+                            </svg>
+                        </span>
+
+                        {traducao.br.main.contato.wpp}
+
+                        <span className="bg-green-200/30 p-2.5 rounded-full group-hover:translate-x-0.5 transition-all duration-320">
+                            <ArrowRight size={22}/>
+                        </span>
+
+                        <div
+                        className="absolute min-h-full w-1/2 scale-90 group-hover:left-full -translate-x-full group-hover:translate-x-full left-0 z-999 transition-all duration-620 blur-[80px] bg-white rounded-full"
+                        />
+                    </button>
+
+                    <p className="text-slate-400 font-medium max-w-[40%] text-center text-shadow-sm z-2 mt-4">
+                        {traducao.br.main.contato.redes}
+                    </p>
+
+                    <section className="flex justify-center gap-2 z-2">
+                        <FaInstagram
+                        size={55}
+                        className="text-neutral-300 border border-slate-800/40 
+                        hover:-translate-y-0.75 
+                        hover:bg-linear-to-r hover:from-pink-500 hover:to-yellow-500 
+                        hover:text-white 
+                        transition-all duration-300 cursor-pointer 
+                        bg-[#171c356a] p-3 rounded-md"
+                        />
+
+                        <FaGithub
+                        size={55}
+                        className="text-neutral-300 border border-slate-800/40 
+                        hover:-translate-y-0.75 
+                        hover:bg-[#222222] 
+                        hover:text-white 
+                        transition-all duration-300 cursor-pointer 
+                        bg-[#171c356a] p-3 rounded-md mx-4"
+                        />
+
+                        <FaLinkedin
+                        size={55}
+                        className="text-neutral-300 border border-slate-800/40 
+                        hover:-translate-y-0.75 
+                        hover:bg-blue-600 
+                        hover:text-white 
+                        transition-all duration-300 cursor-pointer 
+                        bg-[#171c356a] p-3 rounded-md"
+                        />
+                    </section>
+                </section>
             </main>
+
+            <footer className="py-15 bg-linear-to-r from-[#03050d] via-[#0a0d1a] to-[#020510] z-2 px-[15%] flex flex-col items-center justify-center gap-4">
+                <span className="flex items-center gap-1 pb-4">
+                    <svg
+                        width="92"
+                        height="92"
+                        viewBox="0 0 100 100"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <defs>
+                        <linearGradient
+                            id="gradG"
+                            x1="0%"
+                            y1="50%"
+                            x2="100%"
+                            y2="50%"
+                            gradientUnits="userSpaceOnUse"
+                        >
+                            <stop offset="0%" stopColor="#00D4FF" />
+                            <stop offset="100%" stopColor="#A855F7" />
+                        </linearGradient>
+                        </defs>
+
+                        <path
+                        d="M50 15 A35 35 0 1 0 85 50 H60"
+                        stroke="url(#gradG)"
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        fill="none"
+                        />
+                    </svg>
+
+                    <h1 className="text-white text-shadow-xs tracking-wider font-semibold text-3xl leading-none">
+                        Gabriel
+                        <span className="text-2xl block bg-linear-to-r from-[#3B82F6] via-[#22D3EE] to-[#A855F7] bg-clip-text text-transparent -mt-1">
+                            Dev
+                        </span>
+                    </h1>
+                </span>
+
+                <p className="text-slate-300/90 font-mono pt-8 border-t border-t-slate-300/8 min-w-full text-center">
+                    © 2026 Gabriel Grozinski. Todos os direitos reservados.
+                </p>
+            </footer>
         </div>
     )
 }
